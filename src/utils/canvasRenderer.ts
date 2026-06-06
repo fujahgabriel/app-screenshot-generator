@@ -1,4 +1,4 @@
-import { ScreenshotScreen, DeviceType, LayoutStyle, BackgroundType, MockupColor, OverlayElement } from "../types";
+import { ScreenshotScreen, DeviceType, LayoutStyle, BackgroundType, MockupColor, OverlayElement, FocalPoint } from "../types";
 
 // ─── Text Utilities ────────────────────────────────────────────────────────────
 
@@ -1222,6 +1222,113 @@ function drawStyledText(
   return currentY;
 }
 
+// ─── Focal Point Magnifier ──────────────────────────────────────────────────────
+
+/**
+ * Draws a frosted-glass magnifying lens panel over the canvas.
+ * - Captures a horizontal slice of the device screen
+ * - Re-renders it scaled up inside a rounded panel at a configurable position
+ * - Applies a subtle dark overlay to the rest of the device screen for focus
+ */
+function drawFocalMagnifier(
+  ctx: CanvasRenderingContext2D,
+  canvas: HTMLCanvasElement,
+  fp: FocalPoint,
+  screenX: number,
+  screenY: number,
+  screenW: number,
+  screenH: number,
+  W: number,
+  H: number
+) {
+  // ── 1. Source region on the canvas (the slice we want to magnify) ──────────
+  const srcCenterY = screenY + screenH * (fp.sourceY / 100);
+  const srcH = screenH * (fp.sourceH / 100);
+  const srcY = srcCenterY - srcH / 2;
+
+  // ── 2. Snapshot that slice BEFORE drawing any overlay ──────────────────────
+  // We use an offscreen canvas so we can draw it scaled later.
+  const snapCanvas = document.createElement("canvas");
+  snapCanvas.width = Math.round(screenW);
+  snapCanvas.height = Math.round(srcH);
+  const snapCtx = snapCanvas.getContext("2d")!;
+  snapCtx.drawImage(
+    canvas,
+    Math.round(screenX), Math.round(srcY), Math.round(screenW), Math.round(srcH),
+    0, 0, snapCanvas.width, snapCanvas.height
+  );
+
+  // ── 3. Dark overlay on the device screen (outside focus strip) ─────────────
+  ctx.save();
+  ctx.fillStyle = `rgba(0,0,0,${fp.overlayOpacity})`;
+  // Top part of device screen (above source strip)
+  if (srcY > screenY) {
+    ctx.fillRect(screenX, screenY, screenW, srcY - screenY);
+  }
+  // Bottom part (below source strip)
+  const srcBottom = srcY + srcH;
+  if (srcBottom < screenY + screenH) {
+    ctx.fillRect(screenX, srcBottom, screenW, (screenY + screenH) - srcBottom);
+  }
+  ctx.restore();
+
+  // ── 4. Panel geometry ──────────────────────────────────────────────────────
+  const panelW = W * (fp.panelW / 100);
+  const panelH = srcH * fp.zoom;
+  const panelX = (W - panelW) / 2;
+  const panelCenterY = H * (fp.panelY / 100);
+  const panelY = panelCenterY - panelH / 2;
+  const cornerR = Math.min(28, panelH * 0.12);
+
+  // ── 5. Panel frosted glass background ─────────────────────────────────────
+  ctx.save();
+
+  // Outer glow / shadow
+  ctx.shadowColor = "rgba(0,0,0,0.55)";
+  ctx.shadowBlur = 60;
+  ctx.shadowOffsetY = 18;
+
+  // Frosted glass fill — translucent dark panel
+  ctx.fillStyle = "rgba(12,14,20,0.72)";
+  drawRoundRect(ctx, panelX, panelY, panelW, panelH, cornerR);
+  ctx.fill();
+  ctx.shadowColor = "transparent";
+  ctx.shadowBlur = 0;
+
+  // Subtle border
+  ctx.strokeStyle = "rgba(255,255,255,0.12)";
+  ctx.lineWidth = 1.5;
+  drawRoundRect(ctx, panelX, panelY, panelW, panelH, cornerR);
+  ctx.stroke();
+  ctx.restore();
+
+  // ── 6. Clip to panel and draw the magnified snapshot ──────────────────────
+  ctx.save();
+  drawRoundRect(ctx, panelX, panelY, panelW, panelH, cornerR);
+  ctx.clip();
+
+  ctx.drawImage(
+    snapCanvas,
+    0, 0, snapCanvas.width, snapCanvas.height,     // source: whole snapshot
+    panelX, panelY, panelW, panelH                  // dest: fill the panel
+  );
+
+  // Inner edge darkening (top + bottom gradient inside panel for depth)
+  const innerGradTop = ctx.createLinearGradient(0, panelY, 0, panelY + panelH * 0.12);
+  innerGradTop.addColorStop(0, "rgba(0,0,0,0.32)");
+  innerGradTop.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = innerGradTop;
+  ctx.fillRect(panelX, panelY, panelW, panelH * 0.12);
+
+  const innerGradBot = ctx.createLinearGradient(0, panelY + panelH * 0.88, 0, panelY + panelH);
+  innerGradBot.addColorStop(0, "rgba(0,0,0,0)");
+  innerGradBot.addColorStop(1, "rgba(0,0,0,0.32)");
+  ctx.fillStyle = innerGradBot;
+  ctx.fillRect(panelX, panelY + panelH * 0.88, panelW, panelH * 0.12);
+
+  ctx.restore();
+}
+
 // ─── Main Export ───────────────────────────────────────────────────────────────
 
 /**
@@ -1581,4 +1688,17 @@ export async function renderScreenshotOnCanvas(
   }
 
   ctx.restore();
+
+  // ── 5. FOCAL POINT MAGNIFIER ──────────────────────────────────────────────
+  // Rendered last so it draws on top of the device frame
+  const fp = screen.focalPoint;
+  if (fp?.enabled) {
+    // Recompute screen bounds (rotation is already applied via ctx.save/rotate above)
+    const _bezelPadding = mockW * 0.04;
+    const _screenX = mockX + _bezelPadding;
+    const _screenY = mockY + _bezelPadding;
+    const _screenW = mockW - _bezelPadding * 2;
+    const _screenH = mockH - _bezelPadding * 2;
+    drawFocalMagnifier(ctx, canvas, fp, _screenX, _screenY, _screenW, _screenH, W, H);
+  }
 }

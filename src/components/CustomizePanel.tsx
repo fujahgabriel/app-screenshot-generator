@@ -785,6 +785,113 @@ export default function CustomizePanel({
         </div>
       </div>
 
+      {/* 8. FOCAL POINT MAGNIFIER */}
+      <div className="p-4 border-b border-slate-800">
+        <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-2 flex items-center justify-between">
+          <span className="flex items-center gap-1.5">
+            <svg className="w-3.5 h-3.5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/>
+            </svg>
+            Focal Magnifier
+          </span>
+          <button
+            onClick={() => {
+              const fp = activeScreen.focalPoint;
+              const next = fp
+                ? { ...fp, enabled: !fp.enabled }
+                : { enabled: true, sourceY: 50, sourceH: 22, zoom: 2.2, panelY: 50, panelW: 88, overlayOpacity: 0.55 };
+              handleUpdateField("focalPoint", next as any);
+            }}
+            className={`w-8 h-4.5 rounded-full relative transition-colors cursor-pointer flex items-center px-0.5 ${
+              activeScreen.focalPoint?.enabled ? "bg-indigo-600" : "bg-slate-700"
+            }`}
+            style={{ width: 28, height: 16 }}
+          >
+            <div
+              className={`w-3 h-3 bg-white rounded-full absolute transition-all ${
+                activeScreen.focalPoint?.enabled ? "left-3.5" : "left-0.5"
+              }`}
+            />
+          </button>
+        </label>
+
+        {activeScreen.focalPoint?.enabled && (
+          <div className="space-y-3 mt-2">
+            <div>
+              <div className="flex justify-between text-[10px] text-slate-500 font-semibold">
+                <span>Focus Position (Y)</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-300">{activeScreen.focalPoint.sourceY}%</span>
+                  <button onClick={() => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, sourceY: 50 } as any)} className="text-indigo-400 hover:text-white cursor-pointer" title="Reset">↺</button>
+                </div>
+              </div>
+              <input type="range" min={5} max={95} value={activeScreen.focalPoint.sourceY} onChange={(e) => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, sourceY: parseInt(e.target.value) } as any)} className="w-full accent-indigo-500 h-1 mt-1 cursor-pointer bg-slate-950 rounded" />
+            </div>
+
+            <div>
+              <div className="flex justify-between text-[10px] text-slate-500 font-semibold">
+                <span>Capture Height</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-300">{activeScreen.focalPoint.sourceH}%</span>
+                  <button onClick={() => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, sourceH: 22 } as any)} className="text-indigo-400 hover:text-white cursor-pointer" title="Reset">↺</button>
+                </div>
+              </div>
+              <input type="range" min={5} max={60} value={activeScreen.focalPoint.sourceH} onChange={(e) => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, sourceH: parseInt(e.target.value) } as any)} className="w-full accent-indigo-500 h-1 mt-1 cursor-pointer bg-slate-950 rounded" />
+            </div>
+
+            <div>
+              <div className="flex justify-between text-[10px] text-slate-500 font-semibold">
+                <span>Zoom Level</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-300">{activeScreen.focalPoint.zoom.toFixed(1)}×</span>
+                  <button onClick={() => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, zoom: 2.2 } as any)} className="text-indigo-400 hover:text-white cursor-pointer" title="Reset">↺</button>
+                </div>
+              </div>
+              <input type="range" min={10} max={50} value={Math.round(activeScreen.focalPoint.zoom * 10)} onChange={(e) => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, zoom: parseInt(e.target.value) / 10 } as any)} className="w-full accent-indigo-500 h-1 mt-1 cursor-pointer bg-slate-950 rounded" />
+            </div>
+
+            <div>
+              <div className="flex justify-between text-[10px] text-slate-500 font-semibold">
+                <span>Panel Position (Y)</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-300">{activeScreen.focalPoint.panelY}%</span>
+                  <button onClick={() => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, panelY: 50 } as any)} className="text-indigo-400 hover:text-white cursor-pointer" title="Reset">↺</button>
+                </div>
+              </div>
+              <input type="range" min={5} max={95} value={activeScreen.focalPoint.panelY} onChange={(e) => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, panelY: parseInt(e.target.value) } as any)} className="w-full accent-indigo-500 h-1 mt-1 cursor-pointer bg-slate-950 rounded" />
+            </div>
+
+            <div>
+              <div className="flex justify-between text-[10px] text-slate-500 font-semibold">
+                <span>Panel Width</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-300">{activeScreen.focalPoint.panelW}%</span>
+                  <button onClick={() => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, panelW: 88 } as any)} className="text-indigo-400 hover:text-white cursor-pointer" title="Reset">↺</button>
+                </div>
+              </div>
+              <input type="range" min={40} max={100} value={activeScreen.focalPoint.panelW} onChange={(e) => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, panelW: parseInt(e.target.value) } as any)} className="w-full accent-indigo-500 h-1 mt-1 cursor-pointer bg-slate-950 rounded" />
+            </div>
+
+            <div>
+              <div className="flex justify-between text-[10px] text-slate-500 font-semibold">
+                <span>Screen Dim</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-300">{Math.round(activeScreen.focalPoint.overlayOpacity * 100)}%</span>
+                  <button onClick={() => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, overlayOpacity: 0.55 } as any)} className="text-indigo-400 hover:text-white cursor-pointer" title="Reset">↺</button>
+                </div>
+              </div>
+              <input type="range" min={0} max={85} value={Math.round(activeScreen.focalPoint.overlayOpacity * 100)} onChange={(e) => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, overlayOpacity: parseInt(e.target.value) / 100 } as any)} className="w-full accent-indigo-500 h-1 mt-1 cursor-pointer bg-slate-950 rounded" />
+            </div>
+
+            <div className="flex items-center justify-between pt-1">
+              <button onClick={() => handleUpdateField("focalPoint", { enabled: true, sourceY: 50, sourceH: 22, zoom: 2.2, panelY: 50, panelW: 88, overlayOpacity: 0.55 } as any)} className="text-[10px] text-indigo-400 hover:text-white cursor-pointer">Reset all</button>
+              <button onClick={() => handleUpdateField("focalPoint", undefined as any)} className="text-[10px] text-rose-400 hover:text-rose-300 cursor-pointer">Remove magnifier</button>
+            </div>
+          </div>
+        )}
+      </div>
+
+
     </div>
   );
 }
