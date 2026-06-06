@@ -710,8 +710,8 @@ export default function CustomizePanel({
             </div>
             <input
               type="range"
-              min={40}
-              max={140}
+              min={15}
+              max={180}
               value={Math.round(activeScreen.deviceScale * 100)}
               onChange={(e) => handleUpdateField("deviceScale", parseFloat(e.target.value) / 100)}
               className="w-full accent-indigo-500 h-1 mt-1 cursor-pointer bg-slate-950 rounded"
