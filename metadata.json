@@ -1,0 +1,6 @@
+{
+  "name": "App Store Screenshot Generator",
+  "description": "Produce professional screenshots for iOS and Android with customizable device frames, Google Fonts, AI-generated captions, pre-designed templates, and ZIP exportation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
