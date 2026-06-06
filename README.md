@@ -4,6 +4,8 @@ AI-powered tool to design, preview, and export high-resolution App Store and Goo
 
 ![Screenshot](./screenshot.jpeg)
 
+[![DeepWiki](https://img.shields.io/badge/DeepWiki-181717?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMjEgMTV2NGEyIDIgMCAwIDEtMiAySDVhMiAyIDAgMCAxLTItMnYtNCIvPjxwb2x5bGluZSBwb2ludHM9IjcgMTAgMTIgMTUgMTcgMTAiLz48bGluZSB4MT0iMTIiIHkxPSIxNSIgeDI9IjEyIiB5Mj0iMyIvPjwvc3ZnPg==)](https://deepwiki.com/fujahgabriel/app-screenshot-generator) ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
+
 ## Features
 
 - **AI Copywriter** — Generate persuasive screenshot captions via Gemini, OpenAI, Anthropic, or OpenRouter (multi-locale support with 22 languages)
@@ -11,8 +13,8 @@ AI-powered tool to design, preview, and export high-resolution App Store and Goo
 - **Device bezels** — Dark, Light, Space Gray, Gold with rotation (-45° to +45°)
 - **Visual customization** — Gradients, solid colors, radial blooms, opacity/scale/position sliders
 - **Google Fonts** — 11 font presets with weight control and auto-loading
+- **Focal Point Magnifier** — Zoom into any area of the device screen with a frosted-glass overlay panel; focus position auto-tracks the magnified region
 - **Overlay effects** — Dust particles, film grain
-- **Background effects** — Drop-shadows and decorative overlays
 - **Slide sequencer** — Add, reorder, duplicate, delete screens with drag-free controls
 - **Multi-locale workflows** — Maintain translations across 22 locales, switch/export per language
 - **Image upload** — Drag-and-drop or click-to-upload screenshots with cover/contain fitting
