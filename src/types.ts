@@ -28,12 +28,12 @@ export interface FocalPoint {
   sourceH: number;
   /** Magnification multiplier for the captured region (1.5–5) */
   zoom: number;
-  /** Y-center of the magnifier panel on the overall canvas, as % of canvas height (0–100) */
-  panelY: number;
   /** Panel width as % of canvas width (50–100) */
   panelW: number;
   /** Dark overlay strength on the device screen outside the focus zone (0–0.85) */
   overlayOpacity: number;
+  /** Vertical nudge offset from auto-positioned panel, as % of canvas height */
+  panelOffset: number;
 }
 
 export interface ScreenshotScreen {

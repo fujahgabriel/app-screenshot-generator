@@ -1238,6 +1238,7 @@ function drawFocalMagnifier(
   screenY: number,
   screenW: number,
   screenH: number,
+  screenRadius: number,
   W: number,
   H: number
 ) {
@@ -1258,8 +1259,11 @@ function drawFocalMagnifier(
     0, 0, snapCanvas.width, snapCanvas.height
   );
 
-  // ── 3. Dark overlay on the device screen (outside focus strip) ─────────────
+  // ── 3. Dark overlay on the device screen (clipped to rounded bounds) ──────
   ctx.save();
+  ctx.beginPath();
+  drawRoundRect(ctx, screenX, screenY, screenW, screenH, screenRadius);
+  ctx.clip();
   ctx.fillStyle = `rgba(0,0,0,${fp.overlayOpacity})`;
   // Top part of device screen (above source strip)
   if (srcY > screenY) {
@@ -1272,12 +1276,14 @@ function drawFocalMagnifier(
   }
   ctx.restore();
 
-  // ── 4. Panel geometry ──────────────────────────────────────────────────────
+  // ── 4. Panel geometry — auto-positioned to follow sourceY ─────────────────
   const panelW = W * (fp.panelW / 100);
   const panelH = srcH * fp.zoom;
   const panelX = (W - panelW) / 2;
-  const panelCenterY = H * (fp.panelY / 100);
-  const panelY = panelCenterY - panelH / 2;
+  // Panel tracks the source position: maps sourceY (0-100% of screen) to same
+  // proportional position on the full canvas, plus optional offset nudge
+  const panelAutoCenterY = screenY + screenH * (fp.sourceY / 100) + H * (fp.panelOffset / 100);
+  const panelY = panelAutoCenterY - panelH / 2;
   const cornerR = Math.min(28, panelH * 0.12);
 
   // ── 5. Panel frosted glass background ─────────────────────────────────────
@@ -1699,6 +1705,7 @@ export async function renderScreenshotOnCanvas(
     const _screenY = mockY + _bezelPadding;
     const _screenW = mockW - _bezelPadding * 2;
     const _screenH = mockH - _bezelPadding * 2;
-    drawFocalMagnifier(ctx, canvas, fp, _screenX, _screenY, _screenW, _screenH, W, H);
+    const _screenRadius = Math.max(mockH * 0.065 - mockW * 0.04, 4);
+    drawFocalMagnifier(ctx, canvas, fp, _screenX, _screenY, _screenW, _screenH, _screenRadius, W, H);
   }
 }

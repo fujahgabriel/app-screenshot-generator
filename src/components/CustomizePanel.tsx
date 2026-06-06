@@ -799,7 +799,7 @@ export default function CustomizePanel({
               const fp = activeScreen.focalPoint;
               const next = fp
                 ? { ...fp, enabled: !fp.enabled }
-                : { enabled: true, sourceY: 50, sourceH: 22, zoom: 2.2, panelY: 50, panelW: 88, overlayOpacity: 0.55 };
+                : { enabled: true, sourceY: 50, sourceH: 22, zoom: 2.2, panelW: 88, overlayOpacity: 0.55, panelOffset: 0 };
               handleUpdateField("focalPoint", next as any);
             }}
             className={`w-8 h-4.5 rounded-full relative transition-colors cursor-pointer flex items-center px-0.5 ${
@@ -852,13 +852,13 @@ export default function CustomizePanel({
 
             <div>
               <div className="flex justify-between text-[10px] text-slate-500 font-semibold">
-                <span>Panel Position (Y)</span>
+                <span>Panel Offset</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-slate-300">{activeScreen.focalPoint.panelY}%</span>
-                  <button onClick={() => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, panelY: 50 } as any)} className="text-indigo-400 hover:text-white cursor-pointer" title="Reset">↺</button>
+                  <span className="text-slate-300">{activeScreen.focalPoint.panelOffset > 0 ? "+" : ""}{activeScreen.focalPoint.panelOffset}%</span>
+                  <button onClick={() => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, panelOffset: 0 } as any)} className="text-indigo-400 hover:text-white cursor-pointer" title="Reset">↺</button>
                 </div>
               </div>
-              <input type="range" min={5} max={95} value={activeScreen.focalPoint.panelY} onChange={(e) => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, panelY: parseInt(e.target.value) } as any)} className="w-full accent-indigo-500 h-1 mt-1 cursor-pointer bg-slate-950 rounded" />
+              <input type="range" min={-25} max={25} value={activeScreen.focalPoint.panelOffset} onChange={(e) => handleUpdateField("focalPoint", { ...activeScreen.focalPoint!, panelOffset: parseInt(e.target.value) } as any)} className="w-full accent-indigo-500 h-1 mt-1 cursor-pointer bg-slate-950 rounded" />
             </div>
 
             <div>
@@ -884,7 +884,7 @@ export default function CustomizePanel({
             </div>
 
             <div className="flex items-center justify-between pt-1">
-              <button onClick={() => handleUpdateField("focalPoint", { enabled: true, sourceY: 50, sourceH: 22, zoom: 2.2, panelY: 50, panelW: 88, overlayOpacity: 0.55 } as any)} className="text-[10px] text-indigo-400 hover:text-white cursor-pointer">Reset all</button>
+              <button onClick={() => handleUpdateField("focalPoint", { enabled: true, sourceY: 50, sourceH: 22, zoom: 2.2, panelW: 88, overlayOpacity: 0.55, panelOffset: 0 } as any)} className="text-[10px] text-indigo-400 hover:text-white cursor-pointer">Reset all</button>
               <button onClick={() => handleUpdateField("focalPoint", undefined as any)} className="text-[10px] text-rose-400 hover:text-rose-300 cursor-pointer">Remove magnifier</button>
             </div>
           </div>
