@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { 
   Sparkles, Plus, Trash, Copy, ChevronUp, ChevronDown, 
-  Gamepad2, Briefcase, Wand2, Info, Check, RefreshCw 
+  Gamepad2, Briefcase, Wand2, Info, Check, RefreshCw,
+  PanelLeftOpen
 } from "lucide-react";
 import { ASOProject, ScreenshotScreen } from "../types";
 import { DEFAULT_PROJECTS } from "../templates";
@@ -17,6 +18,8 @@ interface SidebarProps {
   onChangeLocale: (locale: string) => void;
   onAddLocale: (locale: string) => void;
   onRemoveLocale: (locale: string) => void;
+  collapsed?: boolean;
+  onToggle?: () => void;
 }
 
 const SUPPORTED_LOCALES = [
@@ -119,6 +122,8 @@ export default function Sidebar({
   onChangeLocale,
   onAddLocale,
   onRemoveLocale,
+  collapsed,
+  onToggle,
 }: SidebarProps) {
   const [showAddLocale, setShowAddLocale] = useState(false);
   const [newLocaleInput, setNewLocaleInput] = useState("");
@@ -364,6 +369,20 @@ export default function Sidebar({
       };
     });
   };
+
+  if (collapsed) {
+    return (
+      <div className="w-8 h-full bg-slate-900 border-r border-slate-800 shrink-0 flex flex-col items-center pt-2 select-none">
+        <button
+          onClick={onToggle}
+          className="p-1 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+          title="Open sidebar"
+        >
+          <PanelLeftOpen className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="w-80 h-full bg-slate-900 border-r border-slate-800 text-slate-200 flex flex-col overflow-y-auto shrink-0 select-none">

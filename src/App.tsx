@@ -4,7 +4,7 @@ import { DEFAULT_PROJECTS, cloneOverlays } from "./templates";
 import Sidebar from "./components/Sidebar";
 import CanvasWorkspace from "./components/CanvasWorkspace";
 import CustomizePanel from "./components/CustomizePanel";
-import { Sparkles, HelpCircle } from "lucide-react";
+import { Sparkles, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen } from "lucide-react";
 
 export default function App() {
   // Bootstrap the application with the productivity preset by default
@@ -35,6 +35,7 @@ export default function App() {
           parsed.globalSettings.lineHeightHeadline ??= 1.25;
           parsed.globalSettings.lineHeightSubtext ??= 1.35;
           parsed.globalSettings.deviceRotation ??= 0;
+          parsed.globalSettings.canvasCornerStyle ??= "rounded";
           parsed.locales ??= ["en"];
           parsed.activeLocale ??= "en";
           parsed.screens = parsed.screens.map((s: any) => ({
@@ -144,6 +145,9 @@ export default function App() {
     });
   };
 
+  const [leftSidebarOpen, setLeftSidebarOpen] = useState(true);
+  const [rightSidebarOpen, setRightSidebarOpen] = useState(true);
+
   // Reset/Apply a preset template category
   const handleApplyTemplate = (type: "kids" | "productivity") => {
     const template = DEFAULT_PROJECTS[type];
@@ -169,6 +173,24 @@ export default function App() {
           <span className="text-[10px] bg-indigo-950 text-indigo-300 font-semibold px-2 py-0.5 rounded border border-indigo-900/60">
             AI-Enhanced
           </span>
+        </div>
+
+        {/* Sidebar Toggle Buttons */}
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setLeftSidebarOpen((v) => !v)}
+            className="p-1.5 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            title={leftSidebarOpen ? "Close left sidebar" : "Open left sidebar"}
+          >
+            {leftSidebarOpen ? <PanelLeftClose className="w-4 h-4" /> : <PanelLeftOpen className="w-4 h-4" />}
+          </button>
+          <button
+            onClick={() => setRightSidebarOpen((v) => !v)}
+            className="p-1.5 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            title={rightSidebarOpen ? "Close right sidebar" : "Open right sidebar"}
+          >
+            {rightSidebarOpen ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
+          </button>
         </div>
 
         {/* Humility & Instructions metadata info (strictly anti-larping) */}
@@ -197,6 +219,8 @@ export default function App() {
           onChangeLocale={handleChangeLocale}
           onAddLocale={handleAddLocale}
           onRemoveLocale={handleRemoveLocale}
+          collapsed={!leftSidebarOpen}
+          onToggle={() => setLeftSidebarOpen((v) => !v)}
         />
 
         {/* Central Workspace: Canvas View & Slide Deck filmic Strip */}
@@ -213,6 +237,8 @@ export default function App() {
           activeScreenId={activeScreenId}
           onUpdateProject={handleUpdateProject}
           activeLocale={project.activeLocale}
+          collapsed={!rightSidebarOpen}
+          onToggle={() => setRightSidebarOpen((v) => !v)}
         />
 
       </main>

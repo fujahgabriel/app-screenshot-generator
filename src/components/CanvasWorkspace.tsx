@@ -318,7 +318,7 @@ export default function CanvasWorkspace({
                   height: `${73 * zoom}vh`,
                   width: "auto"
                 }}
-                className="rounded-2xl border border-slate-800 object-contain shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)] bg-slate-900 transition-all duration-150"
+                className={`${project.globalSettings.canvasCornerStyle === "square" ? "rounded-none" : "rounded-2xl"} border border-slate-800 object-contain shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)] bg-slate-900 transition-all duration-150`}
               />
             </div>
           ) : (
@@ -357,6 +357,31 @@ export default function CanvasWorkspace({
             >
               100%
             </button>
+            <div className="w-px h-3.5 bg-slate-800 mx-0.5" />
+            <div className="flex items-center gap-0.5">
+              <button
+                onClick={() => onUpdateProject((p) => ({ ...p, globalSettings: { ...p.globalSettings, canvasCornerStyle: "rounded" } }))}
+                className={`text-[9px] px-1.5 py-0.5 rounded cursor-pointer font-bold transition-colors ${
+                  project.globalSettings.canvasCornerStyle === "rounded"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-slate-800 hover:bg-slate-700 text-slate-400"
+                }`}
+                title="Rounded corners"
+              >
+                Round
+              </button>
+              <button
+                onClick={() => onUpdateProject((p) => ({ ...p, globalSettings: { ...p.globalSettings, canvasCornerStyle: "square" } }))}
+                className={`text-[9px] px-1.5 py-0.5 rounded cursor-pointer font-bold transition-colors ${
+                  project.globalSettings.canvasCornerStyle === "square"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-slate-800 hover:bg-slate-700 text-slate-400"
+                }`}
+                title="Square corners"
+              >
+                Square
+              </button>
+            </div>
             <div className="w-px h-3.5 bg-slate-800 mx-0.5" />
             <button
               onClick={handleToggleFullscreen}

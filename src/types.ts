@@ -8,6 +8,8 @@ export type MockupColor = "dark" | "light" | "gold" | "spacegray";
 
 export type OverlayType = "dust" | "grain";
 
+export type CanvasCornerStyle = "rounded" | "square";
+
 export interface OverlayElement {
   type: OverlayType;
   enabled: boolean;
@@ -101,6 +103,7 @@ export interface ASOProject {
     align: "left" | "center" | "right";
     layoutStyle: LayoutStyle;
     deviceRotation?: number;
+    canvasCornerStyle: CanvasCornerStyle;
     overlays: OverlayElement[];
   };
   screens: ScreenshotScreen[];

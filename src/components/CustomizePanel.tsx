@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { 
   Lock, Unlock, Upload, Check, AlertCircle,
-  Type, Move, Palette, LayoutGrid
+  Type, Move, Palette, LayoutGrid, PanelRightOpen
 } from "lucide-react";
 import { ASOProject, ScreenshotScreen, DeviceType, LayoutStyle, BackgroundType, MockupColor } from "../types";
 import { GOOGLE_FONTS_PRESETS, DEVICE_SIZES } from "../templates";
@@ -11,6 +11,8 @@ interface CustomizePanelProps {
   activeScreenId: string;
   onUpdateProject: (updater: (p: ASOProject) => ASOProject) => void;
   activeLocale: string;
+  collapsed?: boolean;
+  onToggle?: () => void;
 }
 
 export default function CustomizePanel({
@@ -18,10 +20,26 @@ export default function CustomizePanel({
   activeScreenId,
   onUpdateProject,
   activeLocale,
+  collapsed,
+  onToggle,
 }: CustomizePanelProps) {
   const activeScreen = project.screens.find(s => s.id === activeScreenId);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
+
+  if (collapsed) {
+    return (
+      <div className="w-8 h-full bg-slate-900 border-l border-slate-800 shrink-0 flex flex-col items-center pt-2 select-none">
+        <button
+          onClick={onToggle}
+          className="p-1 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+          title="Open customize panel"
+        >
+          <PanelRightOpen className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
 
   if (!activeScreen) {
     return (

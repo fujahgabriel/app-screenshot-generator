@@ -375,6 +375,7 @@ export const DEFAULT_PROJECTS: Record<"kids" | "productivity", ASOProject> = {
       align: "center",
       layoutStyle: "text-top",
       deviceRotation: 0,
+      canvasCornerStyle: "rounded",
       overlays: cloneOverlays()
     },
     screens: KIDS_GAME_SCREENS.map((s, index) => ({
@@ -409,6 +410,7 @@ export const DEFAULT_PROJECTS: Record<"kids" | "productivity", ASOProject> = {
       align: "left",
       layoutStyle: "text-top",
       deviceRotation: 0,
+      canvasCornerStyle: "rounded",
       overlays: cloneOverlays()
     },
     screens: PRODUCTIVITY_SCREENS.map((s, index) => ({
