@@ -2,15 +2,23 @@ import { ASOProject, ScreenshotScreen, OverlayElement } from "./types";
 
 export const GOOGLE_FONTS_PRESETS = [
   { name: "Inter", category: "sans-serif", weight: "700" },
+  { name: "Geist", category: "sans-serif", weight: "700" },
+  { name: "Manrope", category: "sans-serif", weight: "700" },
   { name: "Plus Jakarta Sans", category: "sans-serif", weight: "800" },
+  { name: "Cal Sans", category: "sans-serif", weight: "600" },
+  { name: "Poppins", category: "sans-serif", weight: "700" },
+  { name: "Nunito", category: "sans-serif", weight: "700" },
+  { name: "Roboto", category: "sans-serif", weight: "700" },
   { name: "Space Grotesk", category: "sans-serif", weight: "700" },
   { name: "Outfit", category: "sans-serif", weight: "800" },
   { name: "Sora", category: "sans-serif", weight: "700" },
   { name: "DM Sans", category: "sans-serif", weight: "700" },
   { name: "Fredoka", category: "sans-serif", weight: "700" },
   { name: "Quicksand", category: "sans-serif", weight: "700" },
+  { name: "Fraunces", category: "serif", weight: "700" },
   { name: "Playfair Display", category: "serif", weight: "700" },
   { name: "DM Serif Display", category: "serif", weight: "400" },
+  { name: "Crimson Pro", category: "serif", weight: "600" },
   { name: "JetBrains Mono", category: "monospace", weight: "700" }
 ];
 
@@ -18,7 +26,7 @@ export const DEVICE_SIZES = {
   iphone_portrait: {
     width: 1242,
     height: 2688,
-    label: "iPhone 6.5\"-6.7\" Display",
+    label: "iPhone 6.5\" Display",
     description: "Required for iOS App Store (1242 x 2688 px)"
   },
   iphone_69_portrait: {
@@ -26,6 +34,24 @@ export const DEVICE_SIZES = {
     height: 2736,
     label: "iPhone 6.9\" Display",
     description: "Required for iOS App Store (1260 x 2736 px)"
+  },
+  iphone_67_portrait: {
+    width: 1284,
+    height: 2778,
+    label: "iPhone 6.7\" Display",
+    description: "Required for iOS App Store (1284 x 2778 px)"
+  },
+  iphone_61_portrait: {
+    width: 1179,
+    height: 2556,
+    label: "iPhone 6.1\" Display",
+    description: "Required for iOS App Store (1179 x 2556 px)"
+  },
+  iphone_55_portrait: {
+    width: 1242,
+    height: 2208,
+    label: "iPhone 5.5\" Display",
+    description: "Required for iOS App Store (1242 x 2208 px)"
   },
   ipad_portrait: {
     width: 2048,
@@ -38,6 +64,18 @@ export const DEVICE_SIZES = {
     height: 3120,
     label: "Android Phone",
     description: "Standard Google Play Store (1440 x 3120 px, 19.5:9 ratio)"
+  },
+  android_pixel_portrait: {
+    width: 1080,
+    height: 2400,
+    label: "Google Pixel",
+    description: "Google Pixel (1080 x 2400 px)"
+  },
+  android_samsung_portrait: {
+    width: 1440,
+    height: 3088,
+    label: "Samsung Galaxy S",
+    description: "Samsung Galaxy S (1440 x 3088 px)"
   }
 };
 
@@ -349,7 +387,39 @@ export const PRODUCTIVITY_SCREENS: Omit<ScreenshotScreen, "id">[] = [
   }
 ];
 
-export const DEFAULT_PROJECTS: Record<"kids" | "productivity", ASOProject> = {
+const BLANK_SCREEN: ScreenshotScreen = {
+  id: "screen_1",
+  name: "Screen 1",
+  headline: "Your Headline Here",
+  subtext: "Your description here",
+  translations: { en: { headline: "Your Headline Here", subtext: "Your description here" } },
+  screenshotUrl: null,
+  screenshotFit: "contain",
+  deviceType: "iphone_portrait",
+  deviceColor: "light",
+  backgroundType: "linear-gradient",
+  backgroundColor1: "#6366F1",
+  backgroundColor2: "#A5B4FC",
+  gradientAngle: 135,
+  fontFamily: "Inter",
+  headlineFontWeight: "700",
+  textColorHeadline: "#FFFFFF",
+  textColorSubtext: "#E0E7FF",
+  fontSizeHeadline: 84,
+  fontSizeSubtext: 40,
+  lineHeightHeadline: 1.25,
+  lineHeightSubtext: 1.35,
+  align: "center",
+  layoutStyle: "text-top",
+  deviceScale: 0.85,
+  deviceOffsetY: 0,
+  deviceOffsetX: 0,
+  deviceRotation: 0,
+  isLocked: true,
+  overlays: cloneOverlays()
+};
+
+export const DEFAULT_PROJECTS: Record<"kids" | "productivity" | "blank", ASOProject> = {
   kids: {
     locales: ["en"],
     activeLocale: "en",
@@ -375,7 +445,9 @@ export const DEFAULT_PROJECTS: Record<"kids" | "productivity", ASOProject> = {
       align: "center",
       layoutStyle: "text-top",
       deviceRotation: 0,
+      showDeviceFrame: true,
       canvasCornerStyle: "rounded",
+      screenshotCorners: "rounded",
       overlays: cloneOverlays()
     },
     screens: KIDS_GAME_SCREENS.map((s, index) => ({
@@ -410,7 +482,9 @@ export const DEFAULT_PROJECTS: Record<"kids" | "productivity", ASOProject> = {
       align: "left",
       layoutStyle: "text-top",
       deviceRotation: 0,
+      showDeviceFrame: true,
       canvasCornerStyle: "rounded",
+      screenshotCorners: "rounded",
       overlays: cloneOverlays()
     },
     screens: PRODUCTIVITY_SCREENS.map((s, index) => ({
@@ -419,5 +493,37 @@ export const DEFAULT_PROJECTS: Record<"kids" | "productivity", ASOProject> = {
       deviceRotation: 0,
       translations: { en: { headline: s.headline, subtext: s.subtext } }
     })) as ScreenshotScreen[]
+  },
+  blank: {
+    locales: ["en"],
+    activeLocale: "en",
+    appName: "",
+    appDescription: "",
+    category: "custom",
+    tone: "minimal",
+    globalSettings: {
+      deviceType: "iphone_portrait",
+      deviceColor: "light",
+      backgroundType: "linear-gradient",
+      backgroundColor1: "#6366F1",
+      backgroundColor2: "#A5B4FC",
+      gradientAngle: 135,
+      fontFamily: "Inter",
+      headlineFontWeight: "700",
+      textColorHeadline: "#FFFFFF",
+      textColorSubtext: "#E0E7FF",
+      fontSizeHeadline: 84,
+      fontSizeSubtext: 40,
+      lineHeightHeadline: 1.25,
+      lineHeightSubtext: 1.35,
+      align: "center",
+      layoutStyle: "text-top",
+      deviceRotation: 0,
+      showDeviceFrame: true,
+      canvasCornerStyle: "rounded",
+      screenshotCorners: "rounded",
+      overlays: cloneOverlays()
+    },
+    screens: [{ ...BLANK_SCREEN }]
   }
 };

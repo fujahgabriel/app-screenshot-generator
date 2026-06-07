@@ -1,4 +1,4 @@
-export type DeviceType = "iphone_portrait" | "iphone_69_portrait" | "ipad_portrait" | "android_portrait";
+export type DeviceType = "iphone_portrait" | "iphone_69_portrait" | "iphone_67_portrait" | "iphone_61_portrait" | "iphone_55_portrait" | "ipad_portrait" | "android_portrait" | "android_pixel_portrait" | "android_samsung_portrait";
 
 export type LayoutStyle = "text-top" | "text-bottom" | "full-screenshot";
 
@@ -22,7 +22,7 @@ export interface LocaleTranslation {
   subtext: string;
 }
 
-export interface FocalPoint {
+export interface ZoomCallout {
   enabled: boolean;
   /** Y-center of the region to capture, as % of device screen height (0–100) */
   sourceY: number;
@@ -68,7 +68,7 @@ export interface ScreenshotScreen {
   deviceRotation?: number; // rotation in degrees (-45 to +45)
   isLocked: boolean; // lock settings to global values (or override)
   overlays: OverlayElement[];
-  focalPoint?: FocalPoint; // optional magnifying lens feature
+  zoomCallout?: ZoomCallout;
 }
 
 export interface AppStoreDimensions {
@@ -103,7 +103,9 @@ export interface ASOProject {
     align: "left" | "center" | "right";
     layoutStyle: LayoutStyle;
     deviceRotation?: number;
+    showDeviceFrame: boolean;
     canvasCornerStyle: CanvasCornerStyle;
+    screenshotCorners: "rounded" | "square";
     overlays: OverlayElement[];
   };
   screens: ScreenshotScreen[];

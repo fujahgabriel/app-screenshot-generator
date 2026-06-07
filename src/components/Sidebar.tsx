@@ -12,7 +12,7 @@ interface SidebarProps {
   activeScreenId: string;
   onUpdateProject: (updater: (p: ASOProject) => ASOProject) => void;
   onSelectScreen: (id: string) => void;
-  onApplyTemplate: (type: "kids" | "productivity") => void;
+  onApplyTemplate: (type: "kids" | "productivity" | "blank") => void;
   activeLocale: string;
   locales: string[];
   onChangeLocale: (locale: string) => void;
@@ -154,9 +154,12 @@ export default function Sidebar({
     );
   }, [project.appName, project.appDescription, project.category, project.tone, project.activeLocale]);
 
-  // Handle template selection
-  const handleLoadTemplate = (type: "kids" | "productivity") => {
-    if (confirm("Are you sure you want to load the template? This will replace your current screenshot settings and texts.")) {
+  // Handle template / blank selection
+  const handleLoadTemplate = (type: "kids" | "productivity" | "blank") => {
+    const msg = type === "blank"
+      ? "Start a new blank project? Current work will be lost."
+      : "Are you sure you want to load the template? This will replace your current screenshot settings and texts.";
+    if (confirm(msg)) {
       onApplyTemplate(type);
     }
   };
@@ -416,8 +419,19 @@ export default function Sidebar({
         </div>
         <p className="text-xs text-gray-500 mt-0.5">Quickly construct professional App Store graphics</p>
         
-        {/* Category Templates */}
+        {/* New Project / Blank */}
         <div className="mt-4">
+          <button
+            onClick={() => handleLoadTemplate("blank")}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border-2 border-dashed border-gray-300 text-gray-500 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer text-sm font-medium"
+          >
+            <Plus className="w-4 h-4" />
+            <span>New Project</span>
+          </button>
+        </div>
+
+        {/* Category Templates */}
+        <div className="mt-3">
           <h2 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">Category Presets</h2>
           <div className="grid grid-cols-2 gap-2">
             <button

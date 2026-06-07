@@ -15,7 +15,7 @@ AI-powered tool to design, preview, and export high-resolution App Store and Goo
 - **Device bezels** — Dark, Light, Space Gray, Gold with rotation (-45° to +45°)
 - **Visual customization** — Gradients, solid colors, radial blooms, opacity/scale/position sliders
 - **Google Fonts** — 11 font presets with weight control and auto-loading
-- **Focal Point Magnifier** — Zoom into any area of the device screen with a frosted-glass overlay panel; focus position auto-tracks the magnified region
+- **Zoom Callout** — Zoom into any area of the device screen with a frosted-glass overlay panel; focus position auto-tracks the magnified region
 - **Overlay effects** — Dust particles, film grain
 - **Slide sequencer** — Add, reorder, duplicate, delete screens with drag-free controls
 - **Multi-locale workflows** — Maintain translations across 22 locales, switch/export per language

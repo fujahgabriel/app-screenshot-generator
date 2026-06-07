@@ -1,4 +1,4 @@
-import { ScreenshotScreen, DeviceType, LayoutStyle, BackgroundType, MockupColor, OverlayElement, FocalPoint } from "../types";
+import { ScreenshotScreen, DeviceType, LayoutStyle, BackgroundType, MockupColor, OverlayElement, ZoomCallout } from "../types";
 
 // ─── Text Utilities ────────────────────────────────────────────────────────────
 
@@ -1222,7 +1222,7 @@ function drawStyledText(
   return currentY;
 }
 
-// ─── Focal Point Magnifier ──────────────────────────────────────────────────────
+// ─── Zoom Callout ──────────────────────────────────────────────────────────────
 
 /**
  * Draws a frosted-glass magnifying lens panel over the canvas.
@@ -1230,10 +1230,10 @@ function drawStyledText(
  * - Re-renders it scaled up inside a rounded panel at a configurable position
  * - Applies a subtle dark overlay to the rest of the device screen for focus
  */
-function drawFocalMagnifier(
+function drawZoomCallout(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
-  fp: FocalPoint,
+  fp: ZoomCallout,
   screenX: number,
   screenY: number,
   screenW: number,
@@ -1344,7 +1344,9 @@ function drawFocalMagnifier(
 export async function renderScreenshotOnCanvas(
   canvas: HTMLCanvasElement,
   screen: ScreenshotScreen,
-  screenshotImageElement: HTMLImageElement | null
+  screenshotImageElement: HTMLImageElement | null,
+  showDeviceFrame: boolean = true,
+  screenshotCorners: "rounded" | "square" = "rounded"
 ): Promise<void> {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
@@ -1508,8 +1510,8 @@ export async function renderScreenshotOnCanvas(
   let mockH = 0;
   let mockX = 0;
   let mockY = 0;
-  const isIphone = screen.deviceType === "iphone_portrait" || screen.deviceType === "iphone_69_portrait";
-  const isAndroid = screen.deviceType === "android_portrait";
+  const isIphone = screen.deviceType === "iphone_portrait" || screen.deviceType === "iphone_69_portrait" || screen.deviceType === "iphone_67_portrait" || screen.deviceType === "iphone_61_portrait" || screen.deviceType === "iphone_55_portrait";
+  const isAndroid = screen.deviceType === "android_portrait" || screen.deviceType === "android_pixel_portrait" || screen.deviceType === "android_samsung_portrait";
   const isIpad = screen.deviceType === "ipad_portrait";
 
   if (screen.deviceType === "iphone_portrait") {
@@ -1518,12 +1520,27 @@ export async function renderScreenshotOnCanvas(
   } else if (screen.deviceType === "iphone_69_portrait") {
     mockW = W * 0.62 * screen.deviceScale;
     mockH = mockW * (2736 / 1260);
+  } else if (screen.deviceType === "iphone_67_portrait") {
+    mockW = W * 0.62 * screen.deviceScale;
+    mockH = mockW * (2778 / 1284);
+  } else if (screen.deviceType === "iphone_61_portrait") {
+    mockW = W * 0.62 * screen.deviceScale;
+    mockH = mockW * (2556 / 1179);
+  } else if (screen.deviceType === "iphone_55_portrait") {
+    mockW = W * 0.62 * screen.deviceScale;
+    mockH = mockW * (2208 / 1242);
   } else if (screen.deviceType === "ipad_portrait") {
     mockW = W * 0.75 * screen.deviceScale;
     mockH = mockW * (2732 / 2048);
   } else if (screen.deviceType === "android_portrait") {
     mockW = W * 0.61 * screen.deviceScale;
     mockH = mockW * (3120 / 1440);
+  } else if (screen.deviceType === "android_pixel_portrait") {
+    mockW = W * 0.61 * screen.deviceScale;
+    mockH = mockW * (2400 / 1080);
+  } else if (screen.deviceType === "android_samsung_portrait") {
+    mockW = W * 0.61 * screen.deviceScale;
+    mockH = mockW * (3088 / 1440);
   }
 
   mockX = (W - mockW) / 2 + (screen.deviceOffsetX * (W / 100));
@@ -1554,150 +1571,203 @@ export async function renderScreenshotOnCanvas(
     ctx.translate(-centerX, -centerY);
   }
 
-  // ── 4a. DEVICE SIDE BUTTONS (Omitted per design feedback) ──────────────────
+  if (showDeviceFrame) {
+    // ── 4b. DEVICE OUTER BEZEL ────────────────────────────────────────────────
+    const bezelRadius = mockH * 0.065;
 
-  // ── 4b. DEVICE OUTER BEZEL ────────────────────────────────────────────────
-  const bezelRadius = mockH * 0.065;
+    // Multi-layer shadow for depth
+    ctx.save();
+    ctx.shadowColor = "rgba(0,0,0,0.5)";
+    ctx.shadowBlur = 60;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 22;
+    ctx.fillStyle =
+      screen.deviceColor === "dark"
+        ? "#070708"
+        : screen.deviceColor === "gold"
+        ? "#F0E4AB"
+        : screen.deviceColor === "spacegray"
+        ? "#2C2C2E"
+        : "#F5F5F7";
+    drawRoundRect(ctx, mockX, mockY, mockW, mockH, bezelRadius);
+    ctx.fill();
+    ctx.restore();
 
-  // Multi-layer shadow for depth
-  ctx.save();
-  ctx.shadowColor = "rgba(0,0,0,0.5)";
-  ctx.shadowBlur = 60;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 22;
-  ctx.fillStyle =
-    screen.deviceColor === "dark"
-      ? "#070708"
-      : screen.deviceColor === "gold"
-      ? "#F0E4AB"
-      : screen.deviceColor === "spacegray"
-      ? "#2C2C2E"
-      : "#F5F5F7";
-  drawRoundRect(ctx, mockX, mockY, mockW, mockH, bezelRadius);
-  ctx.fill();
-  ctx.restore();
+    // Bezel itself
+    ctx.fillStyle =
+      screen.deviceColor === "dark"
+        ? "#0A0A0C"
+        : screen.deviceColor === "gold"
+        ? "#EDD98A"
+        : screen.deviceColor === "spacegray"
+        ? "#2C2C2E"
+        : "#E8E8EA";
+    drawRoundRect(ctx, mockX, mockY, mockW, mockH, bezelRadius);
+    ctx.fill();
 
-  // Bezel itself
-  ctx.fillStyle =
-    screen.deviceColor === "dark"
-      ? "#0A0A0C"
-      : screen.deviceColor === "gold"
-      ? "#EDD98A"
-      : screen.deviceColor === "spacegray"
-      ? "#2C2C2E"
-      : "#E8E8EA";
-  drawRoundRect(ctx, mockX, mockY, mockW, mockH, bezelRadius);
-  ctx.fill();
-
-  // Premium bezel edge line
-  const bezelBorderGrad = ctx.createLinearGradient(mockX, mockY, mockX + mockW, mockY + mockH);
-  if (screen.deviceColor === "dark") {
-    bezelBorderGrad.addColorStop(0, "rgba(255,255,255,0.12)");
-    bezelBorderGrad.addColorStop(0.5, "rgba(255,255,255,0.04)");
-    bezelBorderGrad.addColorStop(1, "rgba(0,0,0,0.2)");
-  } else {
-    bezelBorderGrad.addColorStop(0, "rgba(255,255,255,0.85)");
-    bezelBorderGrad.addColorStop(0.5, "rgba(200,200,200,0.4)");
-    bezelBorderGrad.addColorStop(1, "rgba(120,120,120,0.3)");
-  }
-  ctx.strokeStyle = bezelBorderGrad;
-  ctx.lineWidth = Math.max(1.5, mockW * 0.004);
-  drawRoundRect(ctx, mockX, mockY, mockW, mockH, bezelRadius);
-  ctx.stroke();
-
-  // ── 4c. SCREEN AREA ───────────────────────────────────────────────────────
-  const bezelPadding = mockW * 0.04;
-  const screenX = mockX + bezelPadding;
-  const screenY = mockY + bezelPadding;
-  const screenW = mockW - bezelPadding * 2;
-  const screenH = mockH - bezelPadding * 2;
-  const screenRadius = Math.max(bezelRadius - bezelPadding, 4);
-
-  ctx.save();
-  ctx.beginPath();
-  drawRoundRect(ctx, screenX, screenY, screenW, screenH, screenRadius);
-  ctx.clip();
-
-  const hasUploadedScreenshot = screen.screenshotUrl && !screen.screenshotUrl.startsWith("procedural:");
-
-  if (hasUploadedScreenshot && screenshotImageElement) {
-    if (screen.screenshotFit === "cover") {
-      const imgRatio = screenshotImageElement.width / screenshotImageElement.height;
-      const screenRatio = screenW / screenH;
-      let drawW, drawH, drawX, drawY;
-      if (imgRatio > screenRatio) {
-        drawH = screenH;
-        drawW = screenH * imgRatio;
-        drawX = screenX - (drawW - screenW) / 2;
-        drawY = screenY;
-      } else {
-        drawW = screenW;
-        drawH = screenW / imgRatio;
-        drawX = screenX;
-        drawY = screenY - (drawH - screenH) / 2;
-      }
-      ctx.drawImage(screenshotImageElement, drawX, drawY, drawW, drawH);
+    // Premium bezel edge line
+    const bezelBorderGrad = ctx.createLinearGradient(mockX, mockY, mockX + mockW, mockY + mockH);
+    if (screen.deviceColor === "dark") {
+      bezelBorderGrad.addColorStop(0, "rgba(255,255,255,0.12)");
+      bezelBorderGrad.addColorStop(0.5, "rgba(255,255,255,0.04)");
+      bezelBorderGrad.addColorStop(1, "rgba(0,0,0,0.2)");
     } else {
-      const imgRatio = screenshotImageElement.width / screenshotImageElement.height;
-      const screenRatio = screenW / screenH;
-      let drawW, drawH, drawX, drawY;
-      if (imgRatio > screenRatio) {
-        drawW = screenW;
-        drawH = screenW / imgRatio;
-        drawX = screenX;
-        drawY = screenY + (screenH - drawH) / 2;
-      } else {
-        drawH = screenH;
-        drawW = screenH * imgRatio;
-        drawX = screenX + (screenW - drawW) / 2;
-        drawY = screenY;
-      }
-      ctx.fillStyle = screen.deviceColor === "dark" ? "#1A202C" : "#EDF2F7";
-      ctx.fillRect(screenX, screenY, screenW, screenH);
-      ctx.drawImage(screenshotImageElement, drawX, drawY, drawW, drawH);
+      bezelBorderGrad.addColorStop(0, "rgba(255,255,255,0.85)");
+      bezelBorderGrad.addColorStop(0.5, "rgba(200,200,200,0.4)");
+      bezelBorderGrad.addColorStop(1, "rgba(120,120,120,0.3)");
     }
-  } else if (screen.screenshotUrl?.startsWith("procedural:")) {
-    drawProceduralScreen(ctx, screenX, screenY, screenW, screenH, screen.screenshotUrl, screen.deviceColor);
+    ctx.strokeStyle = bezelBorderGrad;
+    ctx.lineWidth = Math.max(1.5, mockW * 0.004);
+    drawRoundRect(ctx, mockX, mockY, mockW, mockH, bezelRadius);
+    ctx.stroke();
+
+    // ── 4c. SCREEN AREA ───────────────────────────────────────────────────────
+    const bezelPadding = mockW * 0.04;
+    const screenX = mockX + bezelPadding;
+    const screenY = mockY + bezelPadding;
+    const screenW = mockW - bezelPadding * 2;
+    const screenH = mockH - bezelPadding * 2;
+    const screenRadius = screenshotCorners === "square" ? 0 : Math.max(bezelRadius - bezelPadding, 4);
+
+    ctx.save();
+    ctx.beginPath();
+    drawRoundRect(ctx, screenX, screenY, screenW, screenH, screenRadius);
+    ctx.clip();
+
+    const hasUploadedScreenshot = screen.screenshotUrl && !screen.screenshotUrl.startsWith("procedural:");
+
+    if (hasUploadedScreenshot && screenshotImageElement) {
+      if (screen.screenshotFit === "cover") {
+        const imgRatio = screenshotImageElement.width / screenshotImageElement.height;
+        const screenRatio = screenW / screenH;
+        let drawW, drawH, drawX, drawY;
+        if (imgRatio > screenRatio) {
+          drawH = screenH;
+          drawW = screenH * imgRatio;
+          drawX = screenX - (drawW - screenW) / 2;
+          drawY = screenY;
+        } else {
+          drawW = screenW;
+          drawH = screenW / imgRatio;
+          drawX = screenX;
+          drawY = screenY - (drawH - screenH) / 2;
+        }
+        ctx.drawImage(screenshotImageElement, drawX, drawY, drawW, drawH);
+      } else {
+        const imgRatio = screenshotImageElement.width / screenshotImageElement.height;
+        const screenRatio = screenW / screenH;
+        let drawW, drawH, drawX, drawY;
+        if (imgRatio > screenRatio) {
+          drawW = screenW;
+          drawH = screenW / imgRatio;
+          drawX = screenX;
+          drawY = screenY + (screenH - drawH) / 2;
+        } else {
+          drawH = screenH;
+          drawW = screenH * imgRatio;
+          drawX = screenX + (screenW - drawW) / 2;
+          drawY = screenY;
+        }
+        ctx.fillStyle = screen.deviceColor === "dark" ? "#1A202C" : "#EDF2F7";
+        ctx.fillRect(screenX, screenY, screenW, screenH);
+        ctx.drawImage(screenshotImageElement, drawX, drawY, drawW, drawH);
+      }
+    } else if (screen.screenshotUrl?.startsWith("procedural:")) {
+      drawProceduralScreen(ctx, screenX, screenY, screenW, screenH, screen.screenshotUrl, screen.deviceColor);
+    } else {
+      drawProceduralScreen(ctx, screenX, screenY, screenW, screenH, "procedural:fallback_image", screen.deviceColor);
+    }
+
+    ctx.restore();
+
+    // ── 4d. SCREEN GLOSS ──────────────────────────────────────────────────────
+    drawScreenGloss(ctx, screenX, screenY, screenW, screenH, screenRadius);
+
+    // ── 4e. DEVICE TOP ACCENTS ────────────────────────────────────────────────
+    if (isIpad) {
+      // iPad Camera
+      ctx.fillStyle = screen.deviceColor === "dark" ? "#0A0A0C" : "#1A1A1C";
+      ctx.beginPath();
+      ctx.arc(mockX + mockW / 2, mockY + bezelPadding / 2, mockW * 0.013, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,0.08)";
+      ctx.beginPath();
+      ctx.arc(mockX + mockW / 2, mockY + bezelPadding / 2, mockW * 0.005, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (isIphone) {
+      // Dynamic Island is omitted because it is captured within simulator screenshots
+    } else if (isAndroid) {
+      // Punch-hole camera
+      ctx.fillStyle = "#000000";
+      ctx.beginPath();
+      ctx.arc(screenX + screenW / 2, screenY + screenH * 0.038, screenW * 0.022, 0, Math.PI * 2);
+      ctx.fill();
+      // Inner camera lens
+      ctx.fillStyle = "rgba(40,60,120,0.6)";
+      ctx.beginPath();
+      ctx.arc(screenX + screenW / 2, screenY + screenH * 0.038, screenW * 0.01, 0, Math.PI * 2);
+      ctx.fill();
+    }
   } else {
-    drawProceduralScreen(ctx, screenX, screenY, screenW, screenH, "procedural:fallback_image", screen.deviceColor);
-  }
+    // No device frame — draw screenshot directly at mockup position
+    const hasUploadedScreenshot = screen.screenshotUrl && !screen.screenshotUrl.startsWith("procedural:");
 
-  ctx.restore();
-
-  // ── 4d. SCREEN GLOSS ──────────────────────────────────────────────────────
-  drawScreenGloss(ctx, screenX, screenY, screenW, screenH, screenRadius);
-
-  // ── 4e. DEVICE TOP ACCENTS ────────────────────────────────────────────────
-  if (isIpad) {
-    // iPad Camera
-    ctx.fillStyle = screen.deviceColor === "dark" ? "#0A0A0C" : "#1A1A1C";
-    ctx.beginPath();
-    ctx.arc(mockX + mockW / 2, mockY + bezelPadding / 2, mockW * 0.013, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "rgba(255,255,255,0.08)";
-    ctx.beginPath();
-    ctx.arc(mockX + mockW / 2, mockY + bezelPadding / 2, mockW * 0.005, 0, Math.PI * 2);
-    ctx.fill();
-  } else if (isIphone) {
-    // Dynamic Island is omitted because it is captured within simulator screenshots
-  } else if (isAndroid) {
-    // Punch-hole camera
-    ctx.fillStyle = "#000000";
-    ctx.beginPath();
-    ctx.arc(screenX + screenW / 2, screenY + screenH * 0.038, screenW * 0.022, 0, Math.PI * 2);
-    ctx.fill();
-    // Inner camera lens
-    ctx.fillStyle = "rgba(40,60,120,0.6)";
-    ctx.beginPath();
-    ctx.arc(screenX + screenW / 2, screenY + screenH * 0.038, screenW * 0.01, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.save();
+    if (screenshotCorners === "rounded") {
+      const bezelRadius = mockH * 0.065;
+      ctx.beginPath();
+      drawRoundRect(ctx, mockX, mockY, mockW, mockH, bezelRadius);
+      ctx.clip();
+    }
+    if (hasUploadedScreenshot && screenshotImageElement) {
+      if (screen.screenshotFit === "cover") {
+        const imgRatio = screenshotImageElement.width / screenshotImageElement.height;
+        const screenRatio = mockW / mockH;
+        let drawW, drawH, drawX, drawY;
+        if (imgRatio > screenRatio) {
+          drawH = mockH;
+          drawW = mockH * imgRatio;
+          drawX = mockX - (drawW - mockW) / 2;
+          drawY = mockY;
+        } else {
+          drawW = mockW;
+          drawH = mockW / imgRatio;
+          drawX = mockX;
+          drawY = mockY - (drawH - mockH) / 2;
+        }
+        ctx.drawImage(screenshotImageElement, drawX, drawY, drawW, drawH);
+      } else {
+        const imgRatio = screenshotImageElement.width / screenshotImageElement.height;
+        const screenRatio = mockW / mockH;
+        let drawW, drawH, drawX, drawY;
+        if (imgRatio > screenRatio) {
+          drawW = mockW;
+          drawH = mockW / imgRatio;
+          drawX = mockX;
+          drawY = mockY + (mockH - drawH) / 2;
+        } else {
+          drawH = mockH;
+          drawW = mockH * imgRatio;
+          drawX = mockX + (mockW - drawW) / 2;
+          drawY = mockY;
+        }
+        ctx.fillStyle = "#1A202C";
+        ctx.fillRect(mockX, mockY, mockW, mockH);
+        ctx.drawImage(screenshotImageElement, drawX, drawY, drawW, drawH);
+      }
+    } else if (screen.screenshotUrl?.startsWith("procedural:")) {
+      drawProceduralScreen(ctx, mockX, mockY, mockW, mockH, screen.screenshotUrl, screen.deviceColor);
+    } else {
+      drawProceduralScreen(ctx, mockX, mockY, mockW, mockH, "procedural:fallback_image", screen.deviceColor);
+    }
+    ctx.restore();
   }
 
   ctx.restore();
 
   // ── 5. FOCAL POINT MAGNIFIER ──────────────────────────────────────────────
   // Rendered last so it draws on top of the device frame
-  const fp = screen.focalPoint;
+  const fp = screen.zoomCallout;
   if (fp?.enabled) {
     // Recompute screen bounds (rotation is already applied via ctx.save/rotate above)
     const _bezelPadding = mockW * 0.04;
@@ -1705,7 +1775,7 @@ export async function renderScreenshotOnCanvas(
     const _screenY = mockY + _bezelPadding;
     const _screenW = mockW - _bezelPadding * 2;
     const _screenH = mockH - _bezelPadding * 2;
-    const _screenRadius = Math.max(mockH * 0.065 - mockW * 0.04, 4);
-    drawFocalMagnifier(ctx, canvas, fp, _screenX, _screenY, _screenW, _screenH, _screenRadius, W, H);
+    const _screenRadius = screenshotCorners === "square" ? 0 : Math.max(mockH * 0.065 - mockW * 0.04, 4);
+    drawZoomCallout(ctx, canvas, fp, _screenX, _screenY, _screenW, _screenH, _screenRadius, W, H);
   }
 }

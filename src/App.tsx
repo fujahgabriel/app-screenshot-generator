@@ -36,6 +36,8 @@ export default function App() {
           parsed.globalSettings.lineHeightSubtext ??= 1.35;
           parsed.globalSettings.deviceRotation ??= 0;
           parsed.globalSettings.canvasCornerStyle ??= "rounded";
+          parsed.globalSettings.showDeviceFrame ??= true;
+          parsed.globalSettings.screenshotCorners ??= "rounded";
           parsed.locales ??= ["en"];
           parsed.activeLocale ??= "en";
           parsed.screens = parsed.screens.map((s: any) => ({
@@ -149,7 +151,7 @@ export default function App() {
   const [rightSidebarOpen, setRightSidebarOpen] = useState(true);
 
   // Reset/Apply a preset template category
-  const handleApplyTemplate = (type: "kids" | "productivity") => {
+  const handleApplyTemplate = (type: "kids" | "productivity" | "blank") => {
     const template = DEFAULT_PROJECTS[type];
     if (template) {
       setProject(template);
@@ -169,10 +171,13 @@ export default function App() {
           <div className="bg-indigo-600 text-white p-1 rounded-md">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
-          <span className="text-sm font-bold text-gray-900 tracking-tight">ASO Studio</span>
-          <span className="text-[10px] bg-indigo-50 text-indigo-600 font-semibold px-2 py-0.5 rounded border border-indigo-200">
-            AI-Enhanced
-          </span>
+          <div className="flex flex-col leading-tight">
+            <span className="text-sm font-bold text-gray-900 tracking-tight">ASO Studio</span>
+            
+          </div>
+          <a href="https://github.com/fujahgabriel" target="_blank" rel="noopener noreferrer" className="text-[10px] bg-gray-100 text-gray-500 font-medium px-2 py-0.5 rounded-full border border-gray-200 hover:bg-gray-200 hover:text-gray-700 transition-colors">
+            By @fujahgabriel
+          </a>
         </div>
 
         {/* Sidebar Toggle Buttons */}
@@ -197,7 +202,7 @@ export default function App() {
         <div className="flex items-center gap-5 text-[11px] text-gray-500">
           <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 py-0.5 px-2.5 rounded-full">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-semibold text-gray-600 leading-none">Studio Engine Active</span>
+            <span className="font-semibold text-gray-600 leading-none">A.I Studio Engine Active</span>
           </div>
           
           

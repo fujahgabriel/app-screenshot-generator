@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { Download, Layers, Play, Check, Sparkles, Loader2, ZoomIn, ZoomOut, Maximize2, Minimize2, ChevronDown } from "lucide-react";
+import { Download, Layers, Play, Check, Sparkles, Loader2, ZoomIn, ZoomOut, Maximize2, Minimize2, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { ASOProject, ScreenshotScreen } from "../types";
 import { DEVICE_SIZES } from "../templates";
 import { renderScreenshotOnCanvas } from "../utils/canvasRenderer";
@@ -33,6 +33,7 @@ export default function CanvasWorkspace({
   const [isExportingZip, setIsExportingZip] = useState(false);
   const [exportProgress, setExportProgress] = useState(0);
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [showToolbar, setShowToolbar] = useState(true);
   const exportMenuRef = useRef<HTMLDivElement>(null);
 
   // Keep a pool of cached HTMLImages for all screenshots to render them instantly
@@ -124,7 +125,7 @@ export default function CanvasWorkspace({
     canvasRef.current.height = renderH;
 
     // Call high performance helper (asynchronously check)
-    renderScreenshotOnCanvas(canvasRef.current, activeScreen, activeImage);
+    renderScreenshotOnCanvas(canvasRef.current, activeScreen, activeImage, project.globalSettings.showDeviceFrame, project.globalSettings.screenshotCorners);
   };
 
   // Fullscreen toggle
@@ -219,7 +220,7 @@ export default function CanvasWorkspace({
             ? { ...screen, headline: translation.headline, subtext: translation.subtext }
             : screen;
 
-          await renderScreenshotOnCanvas(exportCanvas, localizedScreen, screenImage);
+          await renderScreenshotOnCanvas(exportCanvas, localizedScreen, screenImage, project.globalSettings.showDeviceFrame, project.globalSettings.screenshotCorners);
 
           const blob = await new Promise<Blob | null>((resolve) => {
             exportCanvas.toBlob((b) => resolve(b), "image/png");
@@ -322,7 +323,7 @@ export default function CanvasWorkspace({
       {/* 2. CHIEFLY DRAW WORKSPACE */}
       <div className="flex-1 min-h-0 relative bg-gray-50 flex flex-col overflow-hidden">
         {/* Scrollable canvas viewport */}
-        <div ref={viewportRef} className="flex-1 overflow-auto flex items-center justify-center p-6 min-h-0 w-full relative">
+        <div ref={viewportRef} className="flex-1 overflow-auto flex items-center justify-center p-6 pt-18 min-h-0 w-full relative">
           {/* Subtle decorative grid backing */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:32px_32px] opacity-40 pointer-events-none" />
 
@@ -347,8 +348,16 @@ export default function CanvasWorkspace({
         </div>
 
         {/* Floating Zoom & Fullscreen Controls */}
-        {activeScreen && (
+        {activeScreen && showToolbar && (
           <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur border border-gray-200 rounded-lg p-1.5 flex items-center gap-1 z-10 shadow-lg select-none">
+            <button
+              onClick={() => setShowToolbar(false)}
+              className="p-1 hover:bg-gray-100 rounded text-gray-300 hover:text-gray-500 cursor-pointer transition-colors"
+              title="Hide toolbar"
+            >
+              <ChevronRight className="w-3 h-3" />
+            </button>
+            <div className="w-px h-3.5 bg-gray-200 mx-0.5" />
             <button 
               onClick={() => setZoom(prev => Math.max(0.4, prev - 0.1))}
               className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-700 cursor-pointer transition-colors"
@@ -408,6 +417,15 @@ export default function CanvasWorkspace({
               {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
             </button>
           </div>
+        )}
+        {activeScreen && !showToolbar && (
+          <button
+            onClick={() => setShowToolbar(true)}
+            className="absolute bottom-4 right-4 bg-white/90 backdrop-blur border border-gray-200 rounded-lg p-1.5 z-10 shadow-lg text-gray-400 hover:text-gray-700 cursor-pointer transition-colors"
+            title="Show toolbar"
+          >
+            <ChevronLeft className="w-3.5 h-3.5" />
+          </button>
         )}
       </div>
 

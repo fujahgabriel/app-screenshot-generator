@@ -1,12 +1,12 @@
 ---
 name: app-store-screenshots
-description: AI-powered App Store screenshot designer with device mockups, canvas rendering, focal magnifier, and multi-locale ASO caption generation
+description: AI-powered App Store screenshot designer with device mockups, canvas rendering, zoom callouts, and multi-locale ASO caption generation
 license: CC BY-NC 4.0
 ---
 
 ## Project Overview
 
-React + Vite + Tailwind CSS 4 app with an Express backend. Generates high-resolution App Store/Play Store screenshots with AI-generated captions, device frames, overlays, and focal magnifier.
+React + Vite + Tailwind CSS 4 app with an Express backend. Generates high-resolution App Store/Play Store screenshots with AI-generated captions, device frames, overlays, and zoom callouts.
 
 ## Key Commands
 
@@ -25,8 +25,8 @@ npm run lint     # TypeScript type check (tsc --noEmit)
 | `src/App.tsx` | Root state, locale management, localStorage persistence, template loading |
 | `src/components/Sidebar.tsx` | AI copywriter form, screen sequencer, locale switcher, template presets |
 | `src/components/CanvasWorkspace.tsx` | Canvas preview, zoom/fullscreen, storyboard, single/ZIP export |
-| `src/components/CustomizePanel.tsx` | Per-slide controls: device frame, colors, typography, overlays, focal magnifier, placement |
-| `src/utils/canvasRenderer.ts` | All canvas drawing — background, text, device mockup, stats card, focal magnifier |
+| `src/components/CustomizePanel.tsx` | Per-slide controls: device frame, colors, typography, overlays, zoom callouts, placement |
+| `src/utils/canvasRenderer.ts` | All canvas drawing — background, text, device mockup, stats card, zoom callouts |
 | `src/templates.ts` | Preset projects, device sizes, Google Fonts, overlay defaults |
 | `src/types.ts` | All TypeScript interfaces |
 
@@ -41,13 +41,13 @@ npm run lint     # TypeScript type check (tsc --noEmit)
 5. **Stats card** (optional) — pill-shaped stat overlay inside device screen
 6. **Screen gloss** — diagonal reflection
 7. **Camera accents** — dynamic island / punch-hole / iPad camera
-8. **Focal point magnifier** (optional) — captures device screen region, renders zoomed in a frosted-glass panel. Dark overlay dims the rest. Panel auto-positions to follow source Y.
+8. **Zoom callout** (optional) — captures device screen region, renders zoomed in a frosted-glass panel. Dark overlay dims the rest. Panel auto-positions to follow source Y.
 
 ## Key Types (types.ts)
 
-- `ScreenshotScreen` — all per-slide properties (device, text, background, overlays, focalPoint, statsCard)
+- `ScreenshotScreen` — all per-slide properties (device, text, background, overlays, zoomCallout, statsCard)
 - `ASOProject` — project metadata + globalSettings + screens[]
-- `FocalPoint` — magnifier settings: sourceY, sourceH, zoom, panelW, overlayOpacity, panelOffset
+- `ZoomCallout` — callout settings: sourceY, sourceH, zoom, panelW, overlayOpacity, panelOffset
 - `StatsCard` — floating stats: items[] ({label, value}), opacity, yOffset, colors
 - `OverlayElement` — type + enabled + scale + opacity
 - `DeviceType` — iphone_portrait, iphone_69_portrait, ipad_portrait, android_portrait
@@ -65,7 +65,7 @@ npm run lint     # TypeScript type check (tsc --noEmit)
 
 - **Locale translations** are stored in `screen.translations[locale]` as `{headline, subtext}`. Switching locales saves current text and loads the target locale's text.
 - **Global sync** — when `screen.isLocked` is true, styling changes propagate to all locked screens and globalSettings.
-- **Focal magnifier** is drawn outside the device clip (after ctx.restore), but the dark overlay is clipped to the screen's rounded rect.
+- **Zoom callout** is drawn outside the device clip (after ctx.restore), but the dark overlay is clipped to the screen's rounded rect.
 - **Stats card** is drawn inside the device screen clip, on top of the screenshot.
 - **Overlays** are drawn on the canvas background (outside device frame).
 - **Procedural screens** (prefixed `procedural:`) are drawn by `drawProceduralScreen()` when no uploaded screenshot exists.
