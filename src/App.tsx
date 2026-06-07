@@ -172,7 +172,7 @@ export default function App() {
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="text-sm font-bold text-gray-900 tracking-tight">ASO Studio</span>
+            <span className="text-sm font-bold text-gray-900 tracking-tight">ASO Screenshot</span>
             
           </div>
           <a href="https://github.com/fujahgabriel" target="_blank" rel="noopener noreferrer" className="text-[10px] bg-gray-100 text-gray-500 font-medium px-2 py-0.5 rounded-full border border-gray-200 hover:bg-gray-200 hover:text-gray-700 transition-colors">

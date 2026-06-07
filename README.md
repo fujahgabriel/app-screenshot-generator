@@ -1,4 +1,4 @@
-# ASO Studio — App Store Screenshot Generator
+# ASO Screenshot — App Store Screenshot Generator
 
 AI-powered tool to design, preview, and export high-resolution App Store and Google Play Store screenshots with AI-generated ASO-optimized copy.
 
