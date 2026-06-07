@@ -136,6 +136,52 @@ export default function TypographySection({ details, isLocked, handleUpdateField
             className="w-full accent-indigo-500 h-1 mt-1 cursor-pointer bg-gray-100 rounded"
           />
         </div>
+
+        {/* Text Shadow */}
+        <div className="border-t border-gray-100 pt-3 mt-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] text-gray-500 font-semibold">Text Shadow</span>
+            <button
+              onClick={() => {
+                const cur = details.textShadow;
+                const next = cur
+                  ? { ...cur, enabled: !cur.enabled }
+                  : { enabled: true, color: "rgba(0,0,0,0.25)", blur: 12, offsetX: 0, offsetY: 3 };
+                handleUpdateField("textShadow", next as any);
+              }}
+              className={`w-7 h-4 rounded-full transition-colors cursor-pointer relative ${details.textShadow?.enabled ? "bg-indigo-500" : "bg-gray-300"}`}
+            >
+              <div className={`w-3 h-3 bg-white rounded-full absolute top-0.5 transition-all ${details.textShadow?.enabled ? "left-3.5" : "left-0.5"}`} />
+            </button>
+          </div>
+          {details.textShadow?.enabled && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <input type="color" value={details.textShadow.color}
+                  onChange={(e) => handleUpdateField("textShadow", { ...details.textShadow!, color: e.target.value } as any)}
+                  className="w-6 h-6 rounded border-0 p-0 cursor-pointer bg-transparent shrink-0"
+                />
+                <span className="text-[10px] text-gray-600 uppercase font-mono">{details.textShadow.color}</span>
+              </div>
+              <div className="flex items-center justify-between text-[10px] text-gray-500">
+                <span>Blur</span>
+                <span className="text-gray-700">{details.textShadow.blur}px</span>
+              </div>
+              <input type="range" min={0} max={60} value={details.textShadow.blur}
+                onChange={(e) => handleUpdateField("textShadow", { ...details.textShadow!, blur: parseInt(e.target.value) } as any)}
+                className="w-full accent-indigo-500 h-1 cursor-pointer bg-gray-100 rounded"
+              />
+              <div className="flex items-center justify-between text-[10px] text-gray-500">
+                <span>Offset Y</span>
+                <span className="text-gray-700">{details.textShadow.offsetY}px</span>
+              </div>
+              <input type="range" min={0} max={20} value={details.textShadow.offsetY}
+                onChange={(e) => handleUpdateField("textShadow", { ...details.textShadow!, offsetY: parseInt(e.target.value) } as any)}
+                className="w-full accent-indigo-500 h-1 cursor-pointer bg-gray-100 rounded"
+              />
+            </div>
+          )}
+        </div>
       </div>
     </CollapsibleSection>
   );

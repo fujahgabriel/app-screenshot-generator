@@ -22,6 +22,14 @@ export interface LocaleTranslation {
   subtext: string;
 }
 
+export interface TextShadow {
+  enabled: boolean;
+  color: string;
+  blur: number;
+  offsetX: number;
+  offsetY: number;
+}
+
 export interface ZoomCallout {
   enabled: boolean;
   /** Y-center of the region to capture, as % of device screen height (0–100) */
@@ -66,9 +74,10 @@ export interface ScreenshotScreen {
   deviceOffsetY: number; // offset from default center (as % of canvas height, e.g. -10 to +10)
   deviceOffsetX: number; // offset as % of canvas width
   deviceRotation?: number; // rotation in degrees (-45 to +45)
-  isLocked: boolean; // lock settings to global values (or override)
+  isLocked: boolean;
   overlays: OverlayElement[];
   zoomCallout?: ZoomCallout;
+  textShadow?: TextShadow;
 }
 
 export interface AppStoreDimensions {
@@ -107,6 +116,7 @@ export interface ASOProject {
     canvasCornerStyle: CanvasCornerStyle;
     screenshotCorners: "rounded" | "square";
     overlays: OverlayElement[];
+    textShadow?: TextShadow;
   };
   screens: ScreenshotScreen[];
 }

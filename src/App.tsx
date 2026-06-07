@@ -38,6 +38,7 @@ export default function App() {
           parsed.globalSettings.canvasCornerStyle ??= "rounded";
           parsed.globalSettings.showDeviceFrame ??= true;
           parsed.globalSettings.screenshotCorners ??= "rounded";
+          parsed.globalSettings.textShadow ??= { enabled: true, color: "rgba(0,0,0,0.25)", blur: 12, offsetX: 0, offsetY: 3 };
           parsed.locales ??= ["en"];
           parsed.activeLocale ??= "en";
           parsed.screens = parsed.screens.map((s: any) => ({

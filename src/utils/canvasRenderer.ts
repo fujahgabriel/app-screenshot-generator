@@ -1400,14 +1400,12 @@ export async function renderScreenshotOnCanvas(
   const xCoord = align === "left" ? paddingX : align === "right" ? W - paddingX : W / 2;
   const wrapW = W - paddingX * 2;
 
-  // Determine if background is light or dark for contrast-adaptive shadows
-  const bgIsLight = bgLum > 0.55;
-  const headlineShadow = bgIsLight
-    ? { color: "rgba(0,0,0,0.08)", blur: 8, offsetY: 2 }
-    : { color: "rgba(0,0,0,0.35)", blur: 12, offsetY: 3 };
-  const subtextShadow = bgIsLight
-    ? { color: "rgba(0,0,0,0.05)", blur: 4, offsetY: 1 }
-    : { color: "rgba(0,0,0,0.25)", blur: 8, offsetY: 2 };
+  // Use user-configured text shadow, or fall back to contrast-adaptive
+  const ts = screen.textShadow;
+  const headlineShadow = ts?.enabled
+    ? { color: ts.color, blur: ts.blur, offsetX: ts.offsetX, offsetY: ts.offsetY }
+    : undefined;
+  const subtextShadow = headlineShadow;
 
   // Premium letter spacing: headlines get tight tracking, subtext gets 0
   const headlineLetterSpacing = screen.fontSizeHeadline * scaleRatio * 0.012;

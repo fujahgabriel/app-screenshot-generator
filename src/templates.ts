@@ -1,4 +1,4 @@
-import { ASOProject, ScreenshotScreen, OverlayElement } from "./types";
+import { ASOProject, ScreenshotScreen, OverlayElement, TextShadow } from "./types";
 
 export const GOOGLE_FONTS_PRESETS = [
   { name: "Inter", category: "sans-serif", weight: "700" },
@@ -84,6 +84,14 @@ export const DEFAULT_OVERLAYS: OverlayElement[] = [
   { type: "grain", enabled: false, scale: 1, opacity: 0.25 },
 ];
 
+export const DEFAULT_TEXT_SHADOW: TextShadow = {
+  enabled: true,
+  color: "rgba(0,0,0,0.25)",
+  blur: 12,
+  offsetX: 0,
+  offsetY: 3,
+};
+
 export function cloneOverlays(): OverlayElement[] {
   return DEFAULT_OVERLAYS.map((o) => ({ ...o }));
 }
@@ -128,7 +136,8 @@ export const KIDS_GAME_SCREENS: Omit<ScreenshotScreen, "id">[] = [
     deviceOffsetY: 4,
     deviceOffsetX: 0,
     isLocked: true,
-    overlays: cloneOverlays()
+    overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
   },
   {
     name: "2. Magical Puzzles",
@@ -156,7 +165,8 @@ export const KIDS_GAME_SCREENS: Omit<ScreenshotScreen, "id">[] = [
     deviceOffsetY: 4,
     deviceOffsetX: 0,
     isLocked: true,
-    overlays: cloneOverlays()
+    overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
   },
   {
     name: "3. Build Avatars",
@@ -184,7 +194,8 @@ export const KIDS_GAME_SCREENS: Omit<ScreenshotScreen, "id">[] = [
     deviceOffsetY: 4,
     deviceOffsetX: 0,
     isLocked: true,
-    overlays: cloneOverlays()
+    overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
   },
   {
     name: "4. Fun Rewards",
@@ -212,7 +223,8 @@ export const KIDS_GAME_SCREENS: Omit<ScreenshotScreen, "id">[] = [
     deviceOffsetY: 4,
     deviceOffsetX: 0,
     isLocked: true,
-    overlays: cloneOverlays()
+    overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
   },
   {
     name: "5. Safe & Secure",
@@ -240,7 +252,8 @@ export const KIDS_GAME_SCREENS: Omit<ScreenshotScreen, "id">[] = [
     deviceOffsetY: 4,
     deviceOffsetX: 0,
     isLocked: true,
-    overlays: cloneOverlays()
+    overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
   }
 ];
 
@@ -271,7 +284,8 @@ export const PRODUCTIVITY_SCREENS: Omit<ScreenshotScreen, "id">[] = [
     deviceOffsetY: 4,
     deviceOffsetX: 0,
     isLocked: true,
-    overlays: cloneOverlays()
+    overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
   },
   {
     name: "2. Tasks",
@@ -299,7 +313,8 @@ export const PRODUCTIVITY_SCREENS: Omit<ScreenshotScreen, "id">[] = [
     deviceOffsetY: 4,
     deviceOffsetX: 0,
     isLocked: true,
-    overlays: cloneOverlays()
+    overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
   },
   {
     name: "3. Calendar",
@@ -327,7 +342,8 @@ export const PRODUCTIVITY_SCREENS: Omit<ScreenshotScreen, "id">[] = [
     deviceOffsetY: 4,
     deviceOffsetX: 0,
     isLocked: true,
-    overlays: cloneOverlays()
+    overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
   },
   {
     name: "4. Performance",
@@ -355,7 +371,8 @@ export const PRODUCTIVITY_SCREENS: Omit<ScreenshotScreen, "id">[] = [
     deviceOffsetY: 4,
     deviceOffsetX: 0,
     isLocked: true,
-    overlays: cloneOverlays()
+    overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
   },
   {
     name: "5. Integrations",
@@ -383,7 +400,8 @@ export const PRODUCTIVITY_SCREENS: Omit<ScreenshotScreen, "id">[] = [
     deviceOffsetY: 4,
     deviceOffsetX: 0,
     isLocked: true,
-    overlays: cloneOverlays()
+    overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
   }
 ];
 
@@ -448,7 +466,8 @@ export const DEFAULT_PROJECTS: Record<"kids" | "productivity" | "blank", ASOProj
       showDeviceFrame: true,
       canvasCornerStyle: "square",
       screenshotCorners: "square",
-      overlays: cloneOverlays()
+      overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
     },
     screens: KIDS_GAME_SCREENS.map((s, index) => ({
       ...s,
@@ -485,7 +504,8 @@ export const DEFAULT_PROJECTS: Record<"kids" | "productivity" | "blank", ASOProj
       showDeviceFrame: true,
       canvasCornerStyle: "square",
       screenshotCorners: "square",
-      overlays: cloneOverlays()
+      overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
     },
     screens: PRODUCTIVITY_SCREENS.map((s, index) => ({
       ...s,
@@ -522,7 +542,8 @@ export const DEFAULT_PROJECTS: Record<"kids" | "productivity" | "blank", ASOProj
       showDeviceFrame: true,
       canvasCornerStyle: "square",
       screenshotCorners: "square",
-      overlays: cloneOverlays()
+      overlays: cloneOverlays(),
+    textShadow: DEFAULT_TEXT_SHADOW
     },
     screens: [{ ...BLANK_SCREEN }]
   }

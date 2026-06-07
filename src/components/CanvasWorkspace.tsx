@@ -321,15 +321,16 @@ export default function CanvasWorkspace({
       </div>
 
       {/* 2. CHIEFLY DRAW WORKSPACE */}
-      <div className="flex-1 min-h-0 relative bg-gray-50 flex flex-col overflow-hidden">
+      <div className="flex-1 bg-gray-50 flex flex-col overflow-hidden relative">
         {/* Scrollable canvas viewport */}
-        <div ref={viewportRef} className="flex-1 overflow-auto flex items-center justify-center p-6 pt-18 min-h-0 w-full relative">
-          {/* Subtle decorative grid backing */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:32px_32px] opacity-40 pointer-events-none" />
+        <div ref={viewportRef} className="flex-1 overflow-auto w-full">
+          {/* Content wrapper — fills viewport, grows with canvas */}
+          <div className="min-h-full flex items-center justify-center p-6 pt-18 relative">
+            {/* Subtle decorative grid backing (scrolls with content) */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:32px_32px] opacity-40 pointer-events-none" />
 
           {activeScreen ? (
             <div className="relative flex items-center justify-center p-4">
-              {/* The canvas maintains original high definition size, styled beautifully by browser scaling */}
               <canvas
                 ref={canvasRef}
                 style={{
@@ -345,6 +346,7 @@ export default function CanvasWorkspace({
               <span>Select or add a screenshot panel in the sequencer to load workspace canvas</span>
             </div>
           )}
+          </div>
         </div>
 
         {/* Floating Zoom & Fullscreen Controls */}

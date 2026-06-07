@@ -114,6 +114,7 @@ export default function CustomizePanel({
               align: current.globalSettings.align,
               layoutStyle: current.globalSettings.layoutStyle,
               overlays: current.globalSettings.overlays || [],
+              textShadow: current.globalSettings.textShadow,
             };
           } else {
             return { ...screen, isLocked: false };
