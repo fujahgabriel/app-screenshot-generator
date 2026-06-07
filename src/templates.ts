@@ -81,7 +81,7 @@ export const DEVICE_SIZES = {
 
 export const DEFAULT_OVERLAYS: OverlayElement[] = [
   { type: "dust", enabled: false, scale: 1, opacity: 0.25 },
-  { type: "grain", enabled: true, scale: 1, opacity: 0.25 },
+  { type: "grain", enabled: false, scale: 1, opacity: 0.25 },
 ];
 
 export function cloneOverlays(): OverlayElement[] {
@@ -89,16 +89,16 @@ export function cloneOverlays(): OverlayElement[] {
 }
 
 // Procedural screen types for placeholder mockups
-export type BuiltInPlaceholderType = 
-  | "kids-welcome" 
-  | "kids-gameplay" 
-  | "kids-rewards" 
-  | "kids-avatar" 
+export type BuiltInPlaceholderType =
+  | "kids-welcome"
+  | "kids-gameplay"
+  | "kids-rewards"
+  | "kids-avatar"
   | "kids-settings"
-  | "prod-dashboard" 
-  | "prod-tasks" 
-  | "prod-calendar" 
-  | "prod-stats" 
+  | "prod-dashboard"
+  | "prod-tasks"
+  | "prod-calendar"
+  | "prod-stats"
   | "prod-settings";
 
 export const KIDS_GAME_SCREENS: Omit<ScreenshotScreen, "id">[] = [
@@ -394,17 +394,17 @@ const BLANK_SCREEN: ScreenshotScreen = {
   subtext: "Your description here",
   translations: { en: { headline: "Your Headline Here", subtext: "Your description here" } },
   screenshotUrl: null,
-  screenshotFit: "contain",
+  screenshotFit: "cover",
   deviceType: "iphone_portrait",
   deviceColor: "light",
-  backgroundType: "linear-gradient",
-  backgroundColor1: "#6366F1",
-  backgroundColor2: "#A5B4FC",
+  backgroundType: "solid",
+  backgroundColor1: "#fff",
+  backgroundColor2: "#fff",
   gradientAngle: 135,
   fontFamily: "Inter",
   headlineFontWeight: "700",
-  textColorHeadline: "#FFFFFF",
-  textColorSubtext: "#E0E7FF",
+  textColorHeadline: "#000",
+  textColorSubtext: "#4D4D4D",
   fontSizeHeadline: 84,
   fontSizeSubtext: 40,
   lineHeightHeadline: 1.25,
@@ -446,8 +446,8 @@ export const DEFAULT_PROJECTS: Record<"kids" | "productivity" | "blank", ASOProj
       layoutStyle: "text-top",
       deviceRotation: 0,
       showDeviceFrame: true,
-      canvasCornerStyle: "rounded",
-      screenshotCorners: "rounded",
+      canvasCornerStyle: "square",
+      screenshotCorners: "square",
       overlays: cloneOverlays()
     },
     screens: KIDS_GAME_SCREENS.map((s, index) => ({
@@ -483,8 +483,8 @@ export const DEFAULT_PROJECTS: Record<"kids" | "productivity" | "blank", ASOProj
       layoutStyle: "text-top",
       deviceRotation: 0,
       showDeviceFrame: true,
-      canvasCornerStyle: "rounded",
-      screenshotCorners: "rounded",
+      canvasCornerStyle: "square",
+      screenshotCorners: "square",
       overlays: cloneOverlays()
     },
     screens: PRODUCTIVITY_SCREENS.map((s, index) => ({
@@ -505,13 +505,13 @@ export const DEFAULT_PROJECTS: Record<"kids" | "productivity" | "blank", ASOProj
       deviceType: "iphone_portrait",
       deviceColor: "light",
       backgroundType: "linear-gradient",
-      backgroundColor1: "#6366F1",
-      backgroundColor2: "#A5B4FC",
+      backgroundColor1: "#fff",
+      backgroundColor2: "#fff",
       gradientAngle: 135,
       fontFamily: "Inter",
       headlineFontWeight: "700",
-      textColorHeadline: "#FFFFFF",
-      textColorSubtext: "#E0E7FF",
+      textColorHeadline: "#000",
+      textColorSubtext: "#000",
       fontSizeHeadline: 84,
       fontSizeSubtext: 40,
       lineHeightHeadline: 1.25,
@@ -520,8 +520,8 @@ export const DEFAULT_PROJECTS: Record<"kids" | "productivity" | "blank", ASOProj
       layoutStyle: "text-top",
       deviceRotation: 0,
       showDeviceFrame: true,
-      canvasCornerStyle: "rounded",
-      screenshotCorners: "rounded",
+      canvasCornerStyle: "square",
+      screenshotCorners: "square",
       overlays: cloneOverlays()
     },
     screens: [{ ...BLANK_SCREEN }]
