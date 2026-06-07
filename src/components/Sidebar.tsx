@@ -372,10 +372,10 @@ export default function Sidebar({
 
   if (collapsed) {
     return (
-      <div className="w-8 h-full bg-slate-900 border-r border-slate-800 shrink-0 flex flex-col items-center pt-2 select-none">
+      <div className="w-8 h-full bg-white border-r border-gray-200 shrink-0 flex flex-col items-center pt-2 select-none">
         <button
           onClick={onToggle}
-          className="p-1 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+          className="p-1 rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors cursor-pointer"
           title="Open sidebar"
         >
           <PanelLeftOpen className="w-4 h-4" />
@@ -385,13 +385,13 @@ export default function Sidebar({
   }
 
   return (
-    <div className="w-80 h-full bg-slate-900 border-r border-slate-800 text-slate-200 flex flex-col overflow-y-auto shrink-0 select-none">
+    <div className="w-80 h-full bg-white border-r border-gray-200 text-gray-800 flex flex-col overflow-y-auto shrink-0 select-none">
       
       {/* App Branding & Category Templates */}
-      <div className="p-4 border-b border-slate-800 bg-slate-950">
+      <div className="p-4 border-b border-gray-200 bg-gray-50">
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-bold text-white flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-indigo-400" />
+          <h1 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-indigo-500" />
             <span>ASO Studio Mockup</span>
           </h1>
           <button
@@ -404,7 +404,7 @@ export default function Sidebar({
               a.click();
               URL.revokeObjectURL(url);
             }}
-            className="text-[10px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded flex items-center gap-1 cursor-pointer"
+            className="text-[10px] font-semibold bg-white border border-gray-200 hover:bg-gray-100 text-gray-600 px-2 py-1 rounded flex items-center gap-1 cursor-pointer"
             title="Export settings"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
@@ -414,21 +414,21 @@ export default function Sidebar({
             Export
           </button>
         </div>
-        <p className="text-xs text-slate-400 mt-0.5">Quickly construct professional App Store graphics</p>
+        <p className="text-xs text-gray-500 mt-0.5">Quickly construct professional App Store graphics</p>
         
         {/* Category Templates */}
         <div className="mt-4">
-          <h2 className="text-xs font-semibold text-slate-400 tracking-wider uppercase mb-2">Category Presets</h2>
+          <h2 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">Category Presets</h2>
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => handleLoadTemplate("kids")}
               className={`p-2 rounded-lg border text-left flex flex-col gap-1 cursor-pointer transition-colors ${
                 project.category === "kids" 
-                  ? "bg-pink-950/40 border-pink-500/50 text-pink-200" 
-                  : "bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-300"
+                  ? "bg-pink-50 border-pink-300 text-pink-700" 
+                  : "bg-white border-gray-200 hover:border-gray-300 text-gray-600"
               }`}
             >
-              <Gamepad2 className={`w-4 h-4 ${project.category === "kids" ? "text-pink-400" : "text-slate-400"}`} />
+              <Gamepad2 className={`w-4 h-4 ${project.category === "kids" ? "text-pink-500" : "text-gray-400"}`} />
               <span className="text-xs font-medium">Kids Game</span>
             </button>
 
@@ -436,11 +436,11 @@ export default function Sidebar({
               onClick={() => handleLoadTemplate("productivity")}
               className={`p-2 rounded-lg border text-left flex flex-col gap-1 cursor-pointer transition-colors ${
                 project.category === "productivity" 
-                  ? "bg-indigo-950/40 border-indigo-500/50 text-indigo-200" 
-                  : "bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-300"
+                  ? "bg-indigo-50 border-indigo-300 text-indigo-700" 
+                  : "bg-white border-gray-200 hover:border-gray-300 text-gray-600"
               }`}
             >
-              <Briefcase className={`w-4 h-4 ${project.category === "productivity" ? "text-indigo-400" : "text-slate-400"}`} />
+              <Briefcase className={`w-4 h-4 ${project.category === "productivity" ? "text-indigo-500" : "text-gray-400"}`} />
               <span className="text-xs font-medium">Productivity</span>
             </button>
           </div>
@@ -448,12 +448,12 @@ export default function Sidebar({
 
         {/* Locale Switcher */}
         <div className="mt-4">
-          <h2 className="text-xs font-semibold text-slate-400 tracking-wider uppercase mb-2">Language</h2>
+          <h2 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">Language</h2>
           <div className="flex items-center gap-2">
             <select
               value={activeLocale}
               onChange={(e) => onChangeLocale(e.target.value)}
-              className="flex-1 bg-slate-900 border border-slate-800 rounded-md px-2 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
+              className="flex-1 bg-white border border-gray-300 rounded-md px-2 py-1.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500 cursor-pointer"
             >
               {locales.map((l) => (
                 <option key={l} value={l}>{LOCALE_NAMES[l] || l}</option>
@@ -462,7 +462,7 @@ export default function Sidebar({
             {locales.length > 1 && (
               <button
                 onClick={() => onRemoveLocale(activeLocale)}
-                className="p-1.5 rounded-md bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-400 hover:border-rose-800 cursor-pointer"
+                className="p-1.5 rounded-md bg-white border border-gray-300 text-gray-500 hover:text-rose-500 hover:border-rose-300 cursor-pointer"
                 title={`Remove ${LOCALE_NAMES[activeLocale] || activeLocale}`}
               >
                 <Trash className="w-3 h-3" />
@@ -470,7 +470,7 @@ export default function Sidebar({
             )}
             <button
               onClick={() => setShowAddLocale(!showAddLocale)}
-              className="p-1.5 rounded-md bg-slate-900 border border-slate-800 text-slate-400 hover:text-indigo-400 hover:border-indigo-800 cursor-pointer"
+              className="p-1.5 rounded-md bg-white border border-gray-300 text-gray-500 hover:text-indigo-600 hover:border-indigo-300 cursor-pointer"
               title="Add language"
             >
               <Plus className="w-3 h-3" />
@@ -489,7 +489,7 @@ export default function Sidebar({
                   }
                   setShowAddLocale(false);
                 }}
-                className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                className="flex-1 bg-gray-50 border border-gray-300 rounded px-2 py-1 text-xs text-gray-700 focus:outline-none focus:border-indigo-500 cursor-pointer"
               >
                 <option value="" disabled>Select a language...</option>
                 {SUPPORTED_LOCALES.filter((l) => !locales.includes(l)).map((l) => (
@@ -501,16 +501,16 @@ export default function Sidebar({
         </div>
       </div>
 
-      {/* AI CAPTION GENERATOR SECTION (Uses @google/genai server proxies) */}
-      <div className="p-4 border-b border-slate-800 bg-slate-950/40">
-        <div className="flex items-center gap-2 text-indigo-400 font-bold text-sm mb-3">
+      {/* AI CAPTION GENERATOR SECTION */}
+      <div className="p-4 border-b border-gray-200 bg-gray-50">
+        <div className="flex items-center gap-2 text-indigo-600 font-bold text-sm mb-3">
           <Wand2 className="w-4 h-4" />
           <span> AI Copywriter</span>
         </div>
 
         <form onSubmit={handleGenerateAICaptions} className="space-y-3">
           <div>
-            <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide">App Title</label>
+            <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wide">App Title</label>
             <input
               type="text"
               value={appNameInput}
@@ -519,12 +519,12 @@ export default function Sidebar({
                 onUpdateProject((current) => ({ ...current, appName: e.target.value }));
               }}
               placeholder="e.g., Sleek Habits"
-              className="mt-1 w-full bg-slate-900 border border-slate-800 rounded-md px-2.5 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              className="mt-1 w-full bg-white border border-gray-300 rounded-md px-2.5 py-1.5 text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500"
             />
           </div>
 
           <div>
-            <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide">
+            <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
               App Short Description
             </label>
             <textarea
@@ -535,20 +535,20 @@ export default function Sidebar({
               }}
               placeholder="What does your app do? What are its key features?"
               rows={3}
-              className="mt-1 w-full bg-slate-900 border border-slate-800 rounded-md p-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 resize-none h-16"
+              className="mt-1 w-full bg-white border border-gray-300 rounded-md p-2 text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 resize-none h-16"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Category</label>
+              <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Category</label>
               <select
                 value={categoryInput}
                 onChange={(e) => {
                   setCategoryInput(e.target.value as any);
                   onUpdateProject((current) => ({ ...current, category: e.target.value as any }));
                 }}
-                className="mt-1 w-full bg-slate-900 border border-slate-800 rounded-md px-2 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                className="mt-1 w-full bg-white border border-gray-300 rounded-md px-2 py-1.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500 cursor-pointer"
               >
                 <option value="kids">Kids Game</option>
                 <option value="productivity">Productivity</option>
@@ -558,14 +558,14 @@ export default function Sidebar({
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Voice Tone</label>
+              <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Voice Tone</label>
               <select
                 value={toneInput}
                 onChange={(e) => {
                   setToneInput(e.target.value as any);
                   onUpdateProject((current) => ({ ...current, tone: e.target.value as any }));
                 }}
-                className="mt-1 w-full bg-slate-900 border border-slate-800 rounded-md px-2 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                className="mt-1 w-full bg-white border border-gray-300 rounded-md px-2 py-1.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500 cursor-pointer"
               >
                 <option value="playful">Playful</option>
                 <option value="bold">Bold & Direct</option>
@@ -577,7 +577,7 @@ export default function Sidebar({
           </div>
 
           <div>
-            <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-1.5">Target Audience</label>
+            <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Target Audience</label>
             <div className="space-y-1.5">
               <div className="flex flex-wrap gap-1">
                 {[
@@ -597,8 +597,8 @@ export default function Sidebar({
                     onClick={() => setTargetAge(a.value)}
                     className={`text-[10px] px-2 py-1 rounded-full border cursor-pointer transition-colors ${
                       targetAge === a.value
-                        ? "bg-indigo-600/30 border-indigo-500 text-indigo-200"
-                        : "bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-500"
+                        ? "bg-indigo-100 border-indigo-300 text-indigo-700"
+                        : "bg-white border-gray-300 text-gray-500 hover:border-gray-400"
                     }`}
                   >
                     {a.label}
@@ -617,8 +617,8 @@ export default function Sidebar({
                     onClick={() => setTargetGender(g.value)}
                     className={`text-[10px] px-2.5 py-1 rounded-full border cursor-pointer transition-colors ${
                       targetGender === g.value
-                        ? "bg-indigo-600/30 border-indigo-500 text-indigo-200"
-                        : "bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-500"
+                        ? "bg-indigo-100 border-indigo-300 text-indigo-700"
+                        : "bg-white border-gray-300 text-gray-500 hover:border-gray-400"
                     }`}
                   >
                     {g.label}
@@ -634,8 +634,8 @@ export default function Sidebar({
                     onClick={() => setTargetParent(p.value)}
                     className={`text-[10px] px-2.5 py-1 rounded-full border cursor-pointer transition-colors ${
                       targetParent === p.value
-                        ? "bg-indigo-600/30 border-indigo-500 text-indigo-200"
-                        : "bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-500"
+                        ? "bg-indigo-100 border-indigo-300 text-indigo-700"
+                        : "bg-white border-gray-300 text-gray-500 hover:border-gray-400"
                     }`}
                   >
                     {p.label}
@@ -646,15 +646,15 @@ export default function Sidebar({
           </div>
 
           <div>
-            <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-1">AI Languages</label>
-            <div className="max-h-32 overflow-y-auto space-y-1 border border-slate-800 rounded-md p-1.5 bg-slate-950">
+            <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wide mb-1">AI Languages</label>
+            <div className="max-h-32 overflow-y-auto space-y-1 border border-gray-200 rounded-md p-1.5 bg-white">
               {project.locales.map((l) => {
                 const checked = aiLocales.includes(l);
                 return (
                   <label
                     key={l}
                     className={`flex items-center gap-2 px-2 py-1 rounded text-xs cursor-pointer transition-colors ${
-                      checked ? "bg-indigo-600/20 text-indigo-200" : "text-slate-400 hover:bg-slate-800"
+                      checked ? "bg-indigo-50 text-indigo-700" : "text-gray-500 hover:bg-gray-100"
                     }`}
                   >
                     <input
@@ -673,13 +673,13 @@ export default function Sidebar({
               })}
             </div>
             {aiLocales.length === 0 && (
-              <p className="text-[10px] text-rose-400 mt-1">Select at least one language</p>
+              <p className="text-[10px] text-rose-500 mt-1">Select at least one language</p>
             )}
           </div>
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide">AI Provider</label>
+              <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wide">AI Provider</label>
               <select
                 value={aiProvider}
                 onChange={(e) => {
@@ -687,7 +687,7 @@ export default function Sidebar({
                   setAiProvider(p);
                   setAiModel(PROVIDER_MODELS[p]?.models[0]?.value || "");
                 }}
-                className="mt-1 w-full bg-slate-900 border border-slate-800 rounded-md px-2 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                className="mt-1 w-full bg-white border border-gray-300 rounded-md px-2 py-1.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500 cursor-pointer"
               >
                 {Object.entries(PROVIDER_MODELS).map(([key, val]) => (
                   <option key={key} value={key}>{val.label}</option>
@@ -695,11 +695,11 @@ export default function Sidebar({
               </select>
             </div>
             <div>
-              <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Model</label>
+              <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Model</label>
               <select
                 value={aiModel}
                 onChange={(e) => setAiModel(e.target.value)}
-                className="mt-1 w-full bg-slate-900 border border-slate-800 rounded-md px-2 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                className="mt-1 w-full bg-white border border-gray-300 rounded-md px-2 py-1.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500 cursor-pointer"
               >
                 {PROVIDER_MODELS[aiProvider]?.models.map((m) => (
                   <option key={m.value} value={m.value}>{m.label}</option>
@@ -709,15 +709,15 @@ export default function Sidebar({
           </div>
 
           <div>
-            <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide">
-              API Key <span className="text-slate-600 font-normal">(leave blank for .env)</span>
+            <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+              API Key <span className="text-gray-400 font-normal">(leave blank for .env)</span>
             </label>
             <input
               type="password"
               value={aiApiKey}
               onChange={(e) => setAiApiKey(e.target.value)}
               placeholder={`Defaults to ${PROVIDER_MODELS[aiProvider]?.label} env key`}
-              className="mt-1 w-full bg-slate-900 border border-slate-800 rounded-md px-2.5 py-1.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+              className="mt-1 w-full bg-white border border-gray-300 rounded-md px-2.5 py-1.5 text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500"
             />
           </div>
 
@@ -726,7 +726,7 @@ export default function Sidebar({
             disabled={isGenerating}
             className={`w-full py-2 px-3 rounded-md text-xs font-bold text-white flex items-center justify-center gap-2 cursor-pointer transition-colors ${
               isGenerating 
-                ? "bg-slate-800 border border-slate-700 text-slate-400" 
+                ? "bg-gray-200 border border-gray-300 text-gray-500" 
                 : "bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-600/10"
             }`}
           >
@@ -745,15 +745,15 @@ export default function Sidebar({
         </form>
 
         {aiError && (
-          <div className="mt-2.5 p-2 bg-red-950/50 border border-red-800 rounded-md text-red-200 text-[11px] leading-relaxed flex gap-1.5 items-start">
-            <Info className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+          <div className="mt-2.5 p-2 bg-red-50 border border-red-200 rounded-md text-red-700 text-[11px] leading-relaxed flex gap-1.5 items-start">
+            <Info className="w-3.5 h-3.5 text-red-500 shrink-0 mt-0.5" />
             <span>{aiError}</span>
           </div>
         )}
 
         {aiSuccess && (
-          <div className="mt-2.5 p-2 bg-emerald-950/50 border border-emerald-800 rounded-md text-emerald-200 text-[11px] flex gap-1.5 items-center">
-            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+          <div className="mt-2.5 p-2 bg-emerald-50 border border-emerald-200 rounded-md text-emerald-700 text-[11px] flex gap-1.5 items-center">
+            <Check className="w-4 h-4 text-emerald-500 shrink-0" />
             <span>ASO copywriting loaded to all 5 screenshots!</span>
           </div>
         )}
@@ -761,11 +761,11 @@ export default function Sidebar({
 
       {/* SCREEN SEQUENCE MANAGER */}
       <div className="p-4 flex-1 flex flex-col min-h-[300px]">
-        <div className="flex items-center justify-between mb-3 text-slate-300">
+        <div className="flex items-center justify-between mb-3 text-gray-600">
           <span className="text-xs font-semibold tracking-wider uppercase">Screenshot Screens ({project.screens.length})</span>
           <button
             onClick={handleAddScreen}
-            className="p-1 px-2 text-[11px] bg-slate-800 hover:bg-indigo-600 hover:text-white rounded flex items-center gap-1 transition-colors cursor-pointer text-slate-300"
+            className="p-1 px-2 text-[11px] bg-white border border-gray-200 hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-200 rounded flex items-center gap-1 transition-colors cursor-pointer text-gray-600"
           >
             <Plus className="w-3 h-3" />
             <span>Add</span>
@@ -782,15 +782,15 @@ export default function Sidebar({
                 onClick={() => onSelectScreen(screen.id)}
                 className={`group p-2 rounded-lg border text-left cursor-pointer transition-all flex items-center justify-between ${
                   isActive 
-                    ? "bg-slate-800 border-indigo-500/50 text-white" 
-                    : "bg-slate-900 border-slate-800 hover:border-slate-700 hover:bg-slate-900/60 text-slate-400"
+                    ? "bg-indigo-50 border-indigo-300 text-gray-900" 
+                    : "bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-500"
                 }`}
               >
                 <div className="flex flex-col min-w-0 pr-2">
-                  <span className={`text-xs font-semibold truncate ${isActive ? "text-indigo-300" : "text-slate-300"}`}>
+                  <span className={`text-xs font-semibold truncate ${isActive ? "text-indigo-700" : "text-gray-700"}`}>
                     {screen.name}
                   </span>
-                  <span className="text-[10px] text-slate-500 truncate mt-0.5 leading-snug">
+                  <span className="text-[10px] text-gray-400 truncate mt-0.5 leading-snug">
                     {screen.headline || "No Caption Title"}
                   </span>
                 </div>
@@ -801,7 +801,7 @@ export default function Sidebar({
                   <button
                     onClick={(e) => handleMoveScreen(index, "up", e)}
                     disabled={index === 0}
-                    className={`p-1 rounded hover:bg-slate-700 hover:text-slate-200 ${index === 0 ? "text-slate-700 cursor-not-allowed" : "text-slate-400 cursor-pointer"}`}
+                    className={`p-1 rounded hover:bg-gray-100 hover:text-gray-700 ${index === 0 ? "text-gray-200 cursor-not-allowed" : "text-gray-400 cursor-pointer"}`}
                     title="Nudge Up"
                   >
                     <ChevronUp className="w-3 h-3" />
@@ -811,7 +811,7 @@ export default function Sidebar({
                   <button
                     onClick={(e) => handleMoveScreen(index, "down", e)}
                     disabled={index === project.screens.length - 1}
-                    className={`p-1 rounded hover:bg-slate-700 hover:text-slate-200 ${index === project.screens.length - 1 ? "text-slate-700 cursor-not-allowed" : "text-slate-400 cursor-pointer"}`}
+                    className={`p-1 rounded hover:bg-gray-100 hover:text-gray-700 ${index === project.screens.length - 1 ? "text-gray-200 cursor-not-allowed" : "text-gray-400 cursor-pointer"}`}
                     title="Nudge Down"
                   >
                     <ChevronDown className="w-3 h-3" />
@@ -820,7 +820,7 @@ export default function Sidebar({
                   {/* Duplicate */}
                   <button
                     onClick={(e) => handleDuplicateScreen(screen.id, e)}
-                    className="p-1 rounded hover:bg-slate-700 hover:text-indigo-400 text-slate-400"
+                    className="p-1 rounded hover:bg-gray-100 hover:text-indigo-600 text-gray-400"
                     title="Duplicate Screen"
                   >
                     <Copy className="w-3 h-3" />
@@ -829,7 +829,7 @@ export default function Sidebar({
                   {/* Remove */}
                   <button
                     onClick={(e) => handleDeleteScreen(screen.id, e)}
-                    className="p-1 rounded hover:bg-slate-700 hover:text-rose-400 text-slate-400"
+                    className="p-1 rounded hover:bg-gray-100 hover:text-rose-500 text-gray-400"
                     title="Delete Screen"
                   >
                     <Trash className="w-3 h-3" />

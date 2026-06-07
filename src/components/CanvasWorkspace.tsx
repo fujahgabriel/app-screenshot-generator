@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { Download, Layers, Play, Check, Sparkles, Loader2, ZoomIn, ZoomOut, Maximize2, Minimize2 } from "lucide-react";
+import { Download, Layers, Play, Check, Sparkles, Loader2, ZoomIn, ZoomOut, Maximize2, Minimize2, ChevronDown } from "lucide-react";
 import { ASOProject, ScreenshotScreen } from "../types";
 import { DEVICE_SIZES } from "../templates";
 import { renderScreenshotOnCanvas } from "../utils/canvasRenderer";
@@ -32,7 +32,8 @@ export default function CanvasWorkspace({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isExportingZip, setIsExportingZip] = useState(false);
   const [exportProgress, setExportProgress] = useState(0);
-  const [exportLocale, setExportLocale] = useState<string>("current");
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const exportMenuRef = useRef<HTMLDivElement>(null);
 
   // Keep a pool of cached HTMLImages for all screenshots to render them instantly
   const [imageCache, setImageCache] = useState<Record<string, HTMLImageElement>>({});
@@ -144,7 +145,19 @@ export default function CanvasWorkspace({
     }
   }, []);
 
-  // Download focused image
+  // Close export dropdown on outside click
+  useEffect(() => {
+    const onClickOutside = (e: MouseEvent) => {
+      if (exportMenuRef.current && !exportMenuRef.current.contains(e.target as Node)) {
+        setShowExportMenu(false);
+      }
+    };
+    if (showExportMenu) {
+      document.addEventListener("mousedown", onClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [showExportMenu]);
+
   const handleDownloadSingle = () => {
     if (!canvasRef.current || !activeScreen) return;
     
@@ -156,7 +169,6 @@ export default function CanvasWorkspace({
     link.click();
   };
 
-  // Export ENTIRE multi-screen deck together as high-resolution ZIP
   const handleDownloadAllZip = async (targetLocale?: string) => {
     if (project.screens.length === 0) return;
     setIsExportingZip(true);
@@ -243,47 +255,23 @@ export default function CanvasWorkspace({
   };
 
   return (
-    <div className="flex-1 min-w-0 bg-slate-950 flex flex-col h-full select-none justify-between overflow-hidden">
+    <div className="flex-1 min-w-0 bg-gray-50 flex flex-col h-full select-none justify-between overflow-hidden">
       
       {/* 1. WORKSPACE NAV BAR ACTIONS */}
-      <div className="h-14 border-b border-slate-800 shrink-0 bg-slate-950/80 backdrop-blur-md px-6 flex items-center justify-between z-10">
+      <div className="h-14 border-b border-gray-200 shrink-0 bg-white/80 backdrop-blur-md px-6 flex items-center justify-between z-10">
         <div>
-          <span className="text-xs font-bold text-white uppercase">{project.appName || "Visual Workspace"}</span>
-          <p className="text-[10px] text-indigo-400 mt-0.5 font-medium">Device Frame: {deviceLabel}</p>
+          <span className="text-xs font-bold text-gray-900 uppercase">{project.appName || "Visual Workspace"}</span>
+          <p className="text-[10px] text-indigo-600 font-medium">Device Frame: {deviceLabel}</p>
         </div>
 
-        {/* EXPORTS TRIGGER ZONE */}
-        <div className="flex items-center gap-2.5">
-          {/* Download focussed slide */}
+        {/* EXPORT DROPDOWN */}
+        <div className="relative" ref={exportMenuRef}>
           <button
-            onClick={handleDownloadSingle}
-            className="flex items-center gap-1.5 p-2 px-3 rounded-md bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-slate-700 hover:border-slate-600 transition-colors cursor-pointer"
-            title="Download the currently active screenshot slide"
-          >
-            <Download className="w-3.5 h-3.5 text-slate-400" />
-            <span>Save Active png</span>
-          </button>
-
-          {/* Locale selector for export */}
-          <select
-            value={exportLocale}
-            onChange={(e) => setExportLocale(e.target.value)}
-            className="bg-slate-900 border border-slate-800 rounded-md px-2 py-1.5 text-[11px] text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
-          >
-            <option value="current">{LOCALE_NAMES[project.activeLocale] || project.activeLocale} (active)</option>
-            {project.locales.map((l) => (
-              <option key={l} value={l}>{LOCALE_NAMES[l] || l}</option>
-            ))}
-            {project.locales.length > 1 && <option value="all">All Languages</option>}
-          </select>
-
-          {/* Download all as zip */}
-          <button
-            onClick={() => handleDownloadAllZip(exportLocale)}
+            onClick={() => setShowExportMenu((v) => !v)}
             disabled={isExportingZip}
             className={`flex items-center gap-1.5 p-2 px-4 rounded-md text-xs font-bold shadow-lg shadow-indigo-600/10 transition-colors cursor-pointer ${
-              isExportingZip 
-                ? "bg-slate-800 text-slate-500 border border-slate-700" 
+              isExportingZip
+                ? "bg-gray-100 text-gray-400 border border-gray-200"
                 : "bg-indigo-600 hover:bg-indigo-500 text-white"
             }`}
           >
@@ -294,20 +282,49 @@ export default function CanvasWorkspace({
               </>
             ) : (
               <>
-                <Layers className="w-3.5 h-3.5" />
-                <span>Export ZIP</span>
+                <Download className="w-3.5 h-3.5" />
+                <span>Export</span>
+                <ChevronDown className="w-3 h-3" />
               </>
             )}
           </button>
+
+          {showExportMenu && !isExportingZip && (
+            <div className="absolute right-0 top-full mt-1 w-52 bg-white border border-gray-200 rounded-lg shadow-xl z-20 py-1">
+              <button
+                onClick={() => { handleDownloadSingle(); setShowExportMenu(false); }}
+                className="w-full text-left px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-2 cursor-pointer"
+              >
+                <Download className="w-3.5 h-3.5 text-gray-400" />
+                <span>Active slide (PNG)</span>
+              </button>
+              <button
+                onClick={() => { handleDownloadAllZip(project.activeLocale); setShowExportMenu(false); }}
+                className="w-full text-left px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-2 cursor-pointer"
+              >
+                <Layers className="w-3.5 h-3.5 text-gray-400" />
+                <span>ZIP — {LOCALE_NAMES[project.activeLocale] || project.activeLocale}</span>
+              </button>
+              {project.locales.length > 1 && (
+                <button
+                  onClick={() => { handleDownloadAllZip("all"); setShowExportMenu(false); }}
+                  className="w-full text-left px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-2 cursor-pointer"
+                >
+                  <Layers className="w-3.5 h-3.5 text-gray-400" />
+                  <span>ZIP — All locales ({project.locales.length})</span>
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
       {/* 2. CHIEFLY DRAW WORKSPACE */}
-      <div className="flex-1 min-h-0 relative bg-slate-950 flex flex-col overflow-hidden">
+      <div className="flex-1 min-h-0 relative bg-gray-50 flex flex-col overflow-hidden">
         {/* Scrollable canvas viewport */}
         <div ref={viewportRef} className="flex-1 overflow-auto flex items-center justify-center p-6 min-h-0 w-full relative">
           {/* Subtle decorative grid backing */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:32px_32px] opacity-30 pointer-events-none" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:32px_32px] opacity-40 pointer-events-none" />
 
           {activeScreen ? (
             <div className="relative flex items-center justify-center p-4">
@@ -318,12 +335,12 @@ export default function CanvasWorkspace({
                   height: `${73 * zoom}vh`,
                   width: "auto"
                 }}
-                className={`${project.globalSettings.canvasCornerStyle === "square" ? "rounded-none" : "rounded-2xl"} border border-slate-800 object-contain shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)] bg-slate-900 transition-all duration-150`}
+                className={`${project.globalSettings.canvasCornerStyle === "square" ? "rounded-none" : "rounded-2xl"} border border-gray-200 object-contain shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] bg-white transition-all duration-150`}
               />
             </div>
           ) : (
-            <div className="text-slate-500 flex flex-col items-center gap-2 text-sm">
-              <Sparkles className="w-10 h-10 text-indigo-500/20 animate-pulse" />
+            <div className="text-gray-400 flex flex-col items-center gap-2 text-sm">
+              <Sparkles className="w-10 h-10 text-indigo-300 animate-pulse" />
               <span>Select or add a screenshot panel in the sequencer to load workspace canvas</span>
             </div>
           )}
@@ -331,40 +348,40 @@ export default function CanvasWorkspace({
 
         {/* Floating Zoom & Fullscreen Controls */}
         {activeScreen && (
-          <div className="absolute bottom-4 right-4 bg-slate-900/90 backdrop-blur border border-slate-800 rounded-lg p-1.5 flex items-center gap-1 z-10 shadow-lg select-none">
+          <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur border border-gray-200 rounded-lg p-1.5 flex items-center gap-1 z-10 shadow-lg select-none">
             <button 
               onClick={() => setZoom(prev => Math.max(0.4, prev - 0.1))}
-              className="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-white cursor-pointer transition-colors"
+              className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-700 cursor-pointer transition-colors"
               title="Zoom Out"
             >
               <ZoomOut className="w-3.5 h-3.5" />
             </button>
-            <span className="text-[10px] font-bold text-slate-300 w-10 text-center">
+            <span className="text-[10px] font-bold text-gray-500 w-10 text-center">
               {Math.round(zoom * 100)}%
             </span>
             <button 
               onClick={() => setZoom(prev => Math.min(2.0, prev + 0.1))}
-              className="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-white cursor-pointer transition-colors"
+              className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-700 cursor-pointer transition-colors"
               title="Zoom In"
             >
               <ZoomIn className="w-3.5 h-3.5" />
             </button>
-            <div className="w-px h-3.5 bg-slate-800 mx-0.5" />
+            <div className="w-px h-3.5 bg-gray-200 mx-0.5" />
             <button 
               onClick={() => setZoom(1.0)}
-              className="text-[9px] px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-indigo-400 rounded cursor-pointer font-bold transition-colors"
+              className="text-[9px] px-1.5 py-0.5 bg-gray-100 hover:bg-gray-200 text-indigo-600 rounded cursor-pointer font-bold transition-colors"
               title="Reset Zoom"
             >
               100%
             </button>
-            <div className="w-px h-3.5 bg-slate-800 mx-0.5" />
+            <div className="w-px h-3.5 bg-gray-200 mx-0.5" />
             <div className="flex items-center gap-0.5">
               <button
                 onClick={() => onUpdateProject((p) => ({ ...p, globalSettings: { ...p.globalSettings, canvasCornerStyle: "rounded" } }))}
                 className={`text-[9px] px-1.5 py-0.5 rounded cursor-pointer font-bold transition-colors ${
                   project.globalSettings.canvasCornerStyle === "rounded"
                     ? "bg-indigo-600 text-white"
-                    : "bg-slate-800 hover:bg-slate-700 text-slate-400"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-500"
                 }`}
                 title="Rounded corners"
               >
@@ -375,17 +392,17 @@ export default function CanvasWorkspace({
                 className={`text-[9px] px-1.5 py-0.5 rounded cursor-pointer font-bold transition-colors ${
                   project.globalSettings.canvasCornerStyle === "square"
                     ? "bg-indigo-600 text-white"
-                    : "bg-slate-800 hover:bg-slate-700 text-slate-400"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-500"
                 }`}
                 title="Square corners"
               >
                 Square
               </button>
             </div>
-            <div className="w-px h-3.5 bg-slate-800 mx-0.5" />
+            <div className="w-px h-3.5 bg-gray-200 mx-0.5" />
             <button
               onClick={handleToggleFullscreen}
-              className="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-white cursor-pointer transition-colors"
+              className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-700 cursor-pointer transition-colors"
               title={isFullscreen ? "Exit Fullscreen (Esc)" : "Enter Fullscreen"}
             >
               {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
@@ -395,8 +412,8 @@ export default function CanvasWorkspace({
       </div>
 
       {/* 3. STORYBOARD HORIZONTAL SLIDES TIMELINE BAR */}
-      <div className="h-28 border-t border-slate-800 bg-slate-950/80 backdrop-blur-md px-6 flex items-center gap-4 shrink-0 overflow-x-auto overflow-y-hidden z-10 scrollbar-thin">
-        <div className="flex items-center gap-1.5 shrink-0 text-slate-500 font-bold text-[10px] uppercase tracking-widest border-r border-slate-800 pr-4 h-full">
+      <div className="h-28 border-t border-gray-200 bg-white/80 backdrop-blur-md px-6 flex items-center gap-4 shrink-0 overflow-x-auto overflow-y-hidden z-10 scrollbar-thin">
+        <div className="flex items-center gap-1.5 shrink-0 text-gray-500 font-bold text-[10px] uppercase tracking-widest border-r border-gray-200 pr-4 h-full">
           <Layers className="w-3.5 h-3.5 text-indigo-500" />
           <span>Slide Deck Pack</span>
         </div>
@@ -413,13 +430,13 @@ export default function CanvasWorkspace({
                 onClick={() => onSelectScreen(screen.id)}
                 className={`relative shrink-0 flex items-center gap-2.5 p-2 rounded-lg border cursor-pointer select-none transition-all ${
                   isActive 
-                    ? "bg-slate-900 border-indigo-500 text-white scale-[1.02]" 
-                    : "bg-slate-950 border-slate-800 hover:border-slate-700 text-slate-400"
+                    ? "bg-white border-indigo-300 text-gray-900 scale-[1.02]" 
+                    : "bg-gray-50 border-gray-200 hover:border-gray-300 text-gray-500"
                 }`}
               >
                 {/* Tiny Aspect Ratio Miniature Preview Frame */}
                 <div 
-                  className={`w-9 bg-slate-800 rounded flex items-center justify-center border border-slate-700 flex-col py-0.5 overflow-hidden ${
+                  className={`w-9 bg-gray-100 rounded flex items-center justify-center border border-gray-200 flex-col py-0.5 overflow-hidden ${
                     isIpad ? "aspect-[4/3] h-7" : "aspect-[9/19.5] h-10"
                   }`}
                   style={{
@@ -436,16 +453,16 @@ export default function CanvasWorkspace({
                 </div>
 
                 <div className="flex flex-col min-w-0 w-24">
-                  <span className={`text-[10px] font-bold truncate leading-none ${isActive ? "text-indigo-300" : "text-slate-300"}`}>
+                  <span className={`text-[10px] font-bold truncate leading-none ${isActive ? "text-indigo-700" : "text-gray-600"}`}>
                     {screen.name}
                   </span>
-                  <span className="text-[9px] text-slate-500 truncate mt-1 leading-snug">
+                  <span className="text-[9px] text-gray-400 truncate mt-1 leading-snug">
                     {screen.headline || "(No Text)"}
                   </span>
                 </div>
 
                 {isActive && (
-                  <div className="absolute -top-1.5 -right-1.5 bg-indigo-500 text-white rounded-full p-0.5 border border-slate-950">
+                  <div className="absolute -top-1.5 -right-1.5 bg-indigo-500 text-white rounded-full p-0.5 border-2 border-white">
                     <Check className="w-2.5 h-2.5" />
                   </div>
                 )}

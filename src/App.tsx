@@ -161,16 +161,16 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-slate-950 font-sans overflow-hidden select-none">
+    <div className="flex flex-col h-screen w-screen bg-gray-50 font-sans overflow-hidden select-none">
       
       {/* 1. TOP HEADER BRAND LINES */}
-      <header className="h-12 shrink-0 bg-slate-900 border-b border-slate-800/80 px-6 flex items-center justify-between z-20">
+      <header className="h-12 shrink-0 bg-white border-b border-gray-200 px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-2">
           <div className="bg-indigo-600 text-white p-1 rounded-md">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
-          <span className="text-sm font-bold text-white tracking-tight">ASO Studio</span>
-          <span className="text-[10px] bg-indigo-950 text-indigo-300 font-semibold px-2 py-0.5 rounded border border-indigo-900/60">
+          <span className="text-sm font-bold text-gray-900 tracking-tight">ASO Studio</span>
+          <span className="text-[10px] bg-indigo-50 text-indigo-600 font-semibold px-2 py-0.5 rounded border border-indigo-200">
             AI-Enhanced
           </span>
         </div>
@@ -179,14 +179,14 @@ export default function App() {
         <div className="flex items-center gap-1">
           <button
             onClick={() => setLeftSidebarOpen((v) => !v)}
-            className="p-1.5 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            className="p-1.5 rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors cursor-pointer"
             title={leftSidebarOpen ? "Close left sidebar" : "Open left sidebar"}
           >
             {leftSidebarOpen ? <PanelLeftClose className="w-4 h-4" /> : <PanelLeftOpen className="w-4 h-4" />}
           </button>
           <button
             onClick={() => setRightSidebarOpen((v) => !v)}
-            className="p-1.5 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            className="p-1.5 rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors cursor-pointer"
             title={rightSidebarOpen ? "Close right sidebar" : "Open right sidebar"}
           >
             {rightSidebarOpen ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
@@ -194,10 +194,10 @@ export default function App() {
         </div>
 
         {/* Humility & Instructions metadata info (strictly anti-larping) */}
-        <div className="flex items-center gap-5 text-[11px] text-slate-400">
-          <div className="flex items-center gap-1.5 bg-slate-950 border border-slate-800/60 py-0.5 px-2.5 rounded-full">
+        <div className="flex items-center gap-5 text-[11px] text-gray-500">
+          <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 py-0.5 px-2.5 rounded-full">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-semibold text-slate-300 leading-none">Studio Engine Active</span>
+            <span className="font-semibold text-gray-600 leading-none">Studio Engine Active</span>
           </div>
           
           
